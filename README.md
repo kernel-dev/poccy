@@ -1,6 +1,6 @@
-# KernelOS
+# Poccy
 
-KernelOS, whilst still a WIP, is a toy OS I've built in my spare time for a school project. More precisely, I am doing my senior's paper/thesis on operating systems and kernels, and am providing this one as an example to detail how one may go about kernel/OS development.
+Poccy, whilst still a WIP, is a toy OS I've built in my spare time for a school project. More precisely, I am doing my senior's paper/thesis on operating systems and kernels, and am providing this one as an example to detail how one may go about kernel/OS development.
 
 ## Goals
 
