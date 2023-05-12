@@ -1,0 +1,6 @@
+bootloader/*
+efi/*
+hda-contents/*
+.DS_Store
+.vscode
+*.o
