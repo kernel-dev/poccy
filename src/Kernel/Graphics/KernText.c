@@ -11,25 +11,25 @@
 #include <Library/UefiLib.h>
 
 VOID
-kprint ( IN CHAR8 *Str )
+kprint (
+  IN CHAR8  *Str
+  )
 {
-    ASSERT (Str != NULL);
+  ASSERT (Str != NULL);
 
-    UINTN Len = _KernStrLen (Str);
+  UINTN  Len = _KernStrLen (Str);
 
-    ASSERT (Len > 0);
+  ASSERT (Len > 0);
 
-    for (UINTN Index = 0; Index < Len; Index++)
-    {
-        if (Str[Index] == '\n')
-        {
-            ScreenCol = 1;
-            ScreenRow++;
-            continue;
-        }
-
-        PutChar (Str[Index]);
+  for (UINTN Index = 0; Index < Len; Index++) {
+    if (Str[Index] == '\n') {
+      ScreenCol = 1;
+      ScreenRow++;
+      continue;
     }
+
+    PutChar (Str[Index]);
+  }
 }
 
 //
@@ -37,54 +37,53 @@ kprint ( IN CHAR8 *Str )
 //
 VOID
 kprintf (
-    IN CONST CHAR8           *Fmt,
-    ...
-)
+  IN CONST CHAR8  *Fmt,
+  ...
+  )
 {
-    // va_list args;
-    // va_start (args, Fmt);
+  // va_list args;
+  // va_start (args, Fmt);
 
-    // CHAR8 Char;
+  // CHAR8 Char;
 
-    // for (Char = *Fmt; Char != '\0'; Char++)
-    // {
+  // for (Char = *Fmt; Char != '\0'; Char++)
+  // {
 
-    // }
+  // }
 
-    // va_end (args);
+  // va_end (args);
 }
 
 VOID
-PutChar ( IN CHAR8 Char )
+PutChar (
+  IN CHAR8  Char
+  )
 {
-    UINT8 *GlyphStart = ((UINT8 *)FontFile) + sizeof(PSF_FONT_HDR) + (Char * 16);
-    UINT8 Glyph[16];
-    
-    for (UINTN N = 0; N < 16; N++)
-        Glyph[N] = GlyphStart[N];
+  UINT8  *GlyphStart = ((UINT8 *)FontFile) + sizeof (PSF_FONT_HDR) + (Char * 16);
+  UINT8  Glyph[16];
 
-    for (UINTN DY = 0; DY < 16; DY++)
-    {
-        for (UINTN DX = 0; DX < 8; DX++)
-        {
-            UINT32 X = ScreenCol * ExtFontHdr.Width + DX;
-            UINT32 Y = ScreenRow * ExtFontHdr.Height + DY;
+  for (UINTN N = 0; N < 16; N++) {
+    Glyph[N] = GlyphStart[N];
+  }
 
-            UINT32 BitIdx   = 7 - DX;
-            UINT32 Bit      = (Glyph[DY] >> BitIdx) & 1;
+  for (UINTN DY = 0; DY < 16; DY++) {
+    for (UINTN DX = 0; DX < 8; DX++) {
+      UINT32  X = ScreenCol * ExtFontHdr.Width + DX;
+      UINT32  Y = ScreenRow * ExtFontHdr.Height + DY;
 
-            if (Bit == 1)
-            {
-                ScreenPutPixel (X, Y, 0xFFFFFFFF);
-            }
-        }
+      UINT32  BitIdx = 7 - DX;
+      UINT32  Bit    = (Glyph[DY] >> BitIdx) & 1;
+
+      if (Bit == 1) {
+        ScreenPutPixel (X, Y, 0xFFFFFFFF);
+      }
     }
+  }
 
-    ScreenCol++;
+  ScreenCol++;
 
-    if (ScreenCol >= FB->HorizontalRes)
-    {
-        ScreenCol = 1;
-        ScreenRow++;
-    }
+  if (ScreenCol >= FB->HorizontalRes) {
+    ScreenCol = 1;
+    ScreenRow++;
+  }
 }
