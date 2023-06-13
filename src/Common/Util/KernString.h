@@ -10,10 +10,12 @@
 
     @param[in]  String       The string to get the length of.
 
-    @retval     UINTN        The length of the string. 
+    @retval     UINTN        The length of the string.
  **/
 UINTN
-_KernStrLen ( IN CHAR8 *String );
+_KernStrLen (
+  IN CHAR8  *String
+  );
 
 /**
     Internal method for reversing a string.
@@ -23,22 +25,20 @@ _KernStrLen ( IN CHAR8 *String );
     @retval         CHAR8*  The reversed string.
  **/
 VOID
-_KernReverseStr ( IN OUT CHAR8 **Buffer );
+_KernReverseStr (
+  IN OUT CHAR8  *Buffer
+  );
 
 /**
     Stringifies an integer value.
 
     @param[in]   Num         The integer to stringify.
-    @param[in]   Base        The base of the integer.
-    @param[out]  Buffer      The buffer to allocate into.
-
-    @retval      UINTN       The length of the string.
+    
+    @retval      CHAR8*     The stringified integer.
  **/
-UINTN
+CHAR8 *
 _KernItoa (
-    IN  INT64    Num,
-    IN  UINT64   Base,
-    OUT CHAR8    **Buffer
-);
+  IN  INT64  Num
+  );
 
 #endif /* KernString.h */

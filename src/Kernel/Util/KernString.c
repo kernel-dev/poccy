@@ -5,74 +5,75 @@
 
 #include <Library/UefiLib.h>
 
+//
+//  The following function has been taken from
+//  Apple's open source repository.
+//
+//  https://opensource.apple.com/source/groff/groff-40/groff/src/libs/libgroff/itoa.c.auto.html
+//
+
+#define MAX_DIGITS  20  /* Enough for UINT64 and INT64 */
+
 UINTN
-_KernStrLen ( IN CHAR8 *String )
+_KernStrLen (
+  IN CHAR8  *String
+  )
 {
-    ASSERT  (String[0] != '\0');
+  ASSERT (String[0] != '\0');
 
-    const CHAR8 *S;
+  const CHAR8  *S;
 
-    for (S = String; *S; ++S);
+  for (S = String; *S; ++S) {
+  }
 
-    return (S - String);
+  return (S - String);
 }
 
-// VOID
-// _KernReverseStr ( IN OUT CHAR8 **Buffer )
-// {
-//     UINTN Length = _KernStrLen (*Buffer);
+VOID
+_KernReverseStr (
+  IN OUT CHAR8  *Buffer
+  )
+{
+  UINTN  Length = _KernStrLen (Buffer);
 
-//     ASSERT (Length > 1);
+  ASSERT (Length > 1);
 
-//     UINTN Beg = 0;
-//     UINTN End = Length - 1;
+  UINTN  Beg = 0;
+  UINTN  End = Length - 1;
 
-//     for (UINTN Index = 0; Index < (Length / 2); Beg++, End--)
-//     {
-//         CHAR8 First = (*Buffer)[Beg];
-//         CHAR8 Last  = (*Buffer)[End];
+  for (UINTN Index = 0; Index < (Length / 2); Beg++, End--) {
+    CHAR8  First = Buffer[Beg];
+    CHAR8  Last  = Buffer[End];
 
-//         (*Buffer)[Beg] = Last;
-//         (*Buffer)[End] = First;
-//     }
-// }
+    Buffer[Beg] = Last;
+    Buffer[End] = First;
+  }
+}
 
+CHAR8 *
+_KernItoa (
+  IN  INT64  Num
+  )
+{
+  static CHAR8  Buffer[MAX_DIGITS + 2];
 
-// UINTN
-// _KernItoa ( 
-//     IN  INT64    Num,
-//     IN  UINT64   Base,
-//     OUT CHAR8    *Buffer)
-// {
-//     if (Base < 2 || Base > 32)
-//         return _KernStrLen (Buffer);
+  CHAR8  *Ptr = Buffer + MAX_DIGITS + 1;
 
-//     UINT64 Absolute = Num * (Num < 0 ? -1 : 1);
+  if (Num >= 0) {
+    do {
+      *--Ptr = '0' + (Num % 10);
 
-//     UINTN Index = 0;
+      Num /= 10;
+    } while (Num != 0);
+  } else {
+    do {
+      *--Ptr = '0' - (Num % 10);
 
-//     while (Absolute)
-//     {
-//         UINTN Remainder = Absolute % Base;
+      Num /= 10;
+    } while (Num != 0);
 
-//         if (Remainder >= 10)
-//             Buffer[Index++] = 65 + (Remainder - 10);
-        
-//         else
-//             Buffer[Index++] = 48 + Remainder;
+    *--Ptr = '-';
+  }
 
-//         Absolute /= Base;
-//     }
-
-//     if (Index == 0)
-//         Buffer[Index++] = '0';
-
-//     if (Num < 0 && Base == 10)
-//         Buffer[Index++] = '-';
-
-//     Buffer[Index] = '\0';
-
-//     // reverse string here
-
-//     return _KernStrLen (Buffer);
-// }
+  return Ptr;
+}
