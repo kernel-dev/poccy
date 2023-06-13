@@ -7,6 +7,9 @@
 #include "../Common/Graphics/KernGraphics.h"
 #include "../Common/Graphics/KernFontParser.h"
 #include "../Common/Util/KernRuntimeValues.h"
+#include "../Common/Util/KernString.h"
+#include "../Common/Drivers/IO/io.h"
+#include "../Common/Drivers/IO/serial.h"
 
 #include <Uefi.h>
 
@@ -14,102 +17,74 @@
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/MemoryAllocationLib.h>
 
-// CHAR8 *itoa(UINTN value, CHAR8 *result, UINTN base) {
-//     // check that the base if valid
-//     if (base < 2 || base > 36) { *result = '\0'; return result; }
-
-//     CHAR8 *ptr = result, *ptr1 = result, tmp_char;
-//     UINTN tmp_value;
-
-//     do {
-//         tmp_value = value;
-//         value /= base;
-//         *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-//     } while ( value );
-
-//     // Apply negative sign
-//     if (tmp_value < 0) *ptr++ = '-';
-//     *ptr-- = '\0';
-//     while(ptr1 < ptr) {
-//         tmp_char = *ptr;
-//         *ptr--= *ptr1;
-//         *ptr1++ = tmp_char;
-//     }
-//     return result;
-// }
-
-// VOID DecToHex (UINTN Number, CHAR8 **Result)
-// {
-//     UINTN Index = 0;
-
-//     while (Number != 0)
-//     {
-//         UINTN Temp = 0;
-
-//         Temp = Number % 16;
-
-//         if (Temp < 10)
-//             (*Result)[Index] = Temp + 48;
-
-//         else
-//             (*Result)[Index] = Temp + 55;
-
-//         Index++;
-//         Number /= 16;
-//     }
-// }
-
 // Entry point for kernel
 VOID
-KernMain (
-    IN EFI_RUNTIME_SERVICES                         *RT,
-    IN EFI_KERN_MEMORY_MAP                          *MemoryMap,
-    IN ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE  **Dsdt,
-    IN KERN_FRAMEBUFFER                             *Framebuffer,
-    IN VOID                                         *TerminalFont)
+EfiMain (
+  IN EFI_RUNTIME_SERVICES                         *RT,
+  IN EFI_KERN_MEMORY_MAP                          *MemoryMap,
+  IN ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE  **Dsdt,
+  IN KERN_FRAMEBUFFER                             *Framebuffer,
+  IN VOID                                         *TerminalFont
+  )
 {
-    FB = Framebuffer;
-    FontFile = TerminalFont;
+  FB       = Framebuffer;
+  FontFile = TerminalFont;
 
-    //
-    //  Clear the screen.
-    //
-    ScreenClearTerminal ();
+  //
+  //  Clear the screen.
+  //
+  ScreenClearTerminal ();
 
-    //
-    //  Initialize font data
-    //
-    PSFInit (
-        TerminalFont,
-        &FontHdr,
-        &ExtFontHdr,
-        TRUE);
+  //
+  //  Initialize font data
+  //
+  PSFInit (
+    TerminalFont,
+    &FontHdr,
+    &ExtFontHdr,
+    TRUE
+    );
 
-    //
-    //  Test print.
-    //
-    kprint ("Hello, kernelOS!\n");
+  //
+  //  Initialize serial I/O.
+  //
+  InitSerial ();
 
-    //
-    //  Create an internal Bitmap
-    //  representation of system memory.
-    //
-    // KernCreateMMap (MemoryMap);
+  //
+  //  Test print.
+  //
+  kprint ("Hello, kernelOS!\n");
 
-    // for (UINTN Index = 0; Index < BitmapSize; Index++)
-    // {
-        // CHAR8 Address[20];
+  kprint ("Constructing bitmap memory map...\n");
 
-        // DecToHex (Index * MemoryMap->DescriptorSize, &Address);
+  //
+  //  Create an internal Bitmap
+  //  representation of system memory.
+  //
+  KernCreateMMap (MemoryMap);
 
-        // kprint(Address);
-        // kprint(": ");
-        // kprint(Bitmap[Index].Free == 1 ? "Free" : "Unavailable");
-    // }
+  UINTN  Increment = 0;
 
-    //
-    //  Should never reach here.
-    //  Will be removed later.
-    //
-    while (TRUE);
-}   
+  for (UINTN Index = 0; Index < BitmapSize; Index++) {
+    for (UINTN Bit = 0; Bit < 8; Bit++) {
+      CHAR8  *Address = _KernItoa (
+                          (UINTN)(MemoryMap->MemoryMap->PhysicalStart + ((Index + Increment) * 4096))
+                          );
+
+      WriteSerialStr ("0x");
+      WriteSerialStr (Address);
+      WriteSerialStr (" : ");
+      WriteSerialStr (((Bitmap[Index] >> Bit) & 1) == 1 ? "Free\n" : "Unavailable\n");
+
+      Increment++;
+    }
+  }
+
+  //
+  //  Should never reach here.
+  //  Will be removed later.
+  //
+  for ( ; ;) {
+    __asm__ ("hlt");
+  }
+}
