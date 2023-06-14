@@ -24,5 +24,5 @@ VOID                   *FontFile = NULL;
 //
 //  Bitmap related values
 //
-UINTN  BitmapSize   = 0;
-UINT8  Bitmap[2048];
+UINTN  BitmapSize = 0;
+UINT8  *Bitmap    = NULL;

@@ -42,16 +42,15 @@ extern PSF_FONT_HDR_EXTENDED  ExtFontHdr;
 extern VOID  *FontFile;
 
 //
-//  Size of the 4-KiB page bitmap.
+//  Total amount of entries (bytes)
+//  in the bitmap.
 //
 extern UINTN  BitmapSize;
 
 //
-//  A bitmap of 4-KiB aligned usable memory.
+//  A bitmap representation of
+//  the system memory.
 //
-//  Includes memory that is already in-use
-//  by a process in the kernel, as well.
-//
-extern UINT8  Bitmap[2048];
+extern UINT8  *Bitmap;
 
 #endif /* KernRuntimeValues.h */
