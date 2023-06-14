@@ -41,4 +41,18 @@ _KernItoa (
   IN  INT64  Num
   );
 
+/**
+    Converts a decimal number to a hexadecimal number.
+
+    @param[in]  Num       The decimal number to convert.
+    @param[in]  Capitals  Whether or not to use capital letters.
+
+    @retval     CHAR8*   The decimal number in a hexadecimal representation
+ **/
+CHAR8 *
+__DecimalToHex (
+  IN  UINTN     Num,
+  IN  BOOLEAN   Capitals
+  );
+
 #endif /* KernString.h */
