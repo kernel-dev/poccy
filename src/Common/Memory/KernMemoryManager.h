@@ -7,14 +7,12 @@
 
 #include <Library/UefiLib.h>
 
-//
-//  Obtains the previous memory descriptor.
-//
-#define PREVIOUS_MEMORY_DESCRIPTOR(MEMORY, SIZE)  (\
-    (EFI_MEMORY_DESCRIPTOR *)( \
-        (UINT8 *)(MEMORY) - (SIZE) \
-    ) \
-)
+#define CREATE_BITMAP_FROM_ENTRY(ENTRY, OFFSET)               \
+  (ENTRY->PhysicalStart +                                    \
+    ((ENTRY->NumberOfPages - OFFSET) * KERN_SIZE_OF_PAGE)    \
+    )
+
+#define CALC_SIZE_OF_FRAME(ENTRY) ENTRY->NumberOfPages * KERN_SIZE_OF_PAGE
 
 /**
     Structure defining a physical memory page.
@@ -47,6 +45,32 @@ enum PageFaultReason {
   InternalError         // Something went wrong internally.
 };
 
+/**
+    Finds the first suitable physical frame
+    in the UEFI system memory map
+    and allocates the bitmap to that frame.
+
+    @param[in]  MemoryMap     The UEFI system memory map passed
+                              by the bootloader.
+    @param[in]  __SizeNeeded  The size of the bitmap in bytes.
+                              If this is not provided, the size
+                              will be calculated first, then
+                              the function will be called another
+                              time with the size provided.
+ **/
+VOID
+AllocateBitmap (
+  IN EFI_KERN_MEMORY_MAP  *MemoryMap,
+  IN UINTN                __SizeNeeded OPTIONAL
+  );
+
+/**
+    Constructs a bitmap representation
+    of the system memory.
+
+    @param[in]  MemoryMap   The UEFI system memory map passed
+                            by the bootloader.
+ **/
 VOID
 KernCreateMMap (
   IN EFI_KERN_MEMORY_MAP  *MemoryMap
