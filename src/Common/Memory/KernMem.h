@@ -7,6 +7,9 @@
 
 #include <Library/UefiLib.h>
 
+#define KERN_SIZE_OF_PAGE  4096
+#define DIV_ROUNDUP(x, y)  ((x + y - 1) / y)
+
 /**
     Fills the provided memory blocks
     with the provided Value for Count bytes.
@@ -167,13 +170,32 @@ KernCopyMem (
   );
 
 /**
+    Finds a matching frame for the requested size
+    of data to be stored.
+
+    @param[in]  Size            The size requested.
+    @param[in]  NumberOfPages   The number of pages to allocate.
+
+    @returns    VOID*           The pointer to the start of the frame.
+ **/
+VOID *
+__FindSuitableFrame (
+  IN  UINTN  Size,
+  IN  UINTN  NumberOfPages
+  );
+
+/**
     Allocates the requested memory size
     and returns a pointer to the start
     of the allocated buffer.
 
     @param[in]  Size    The size of the buffer to allocate (in bytes)
+
+    @returns    VOID*   The pointer to the start of the allocated buffer.
  **/
-// VOID *
-// kmalloc ( IN UINTN Size );
+VOID *
+kmalloc (
+  IN UINTN  Size
+  );
 
 #endif /* KernMem.h */

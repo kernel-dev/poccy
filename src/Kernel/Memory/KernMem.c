@@ -14,7 +14,7 @@ KernMemset8 (
   UINT8  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT8)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -30,7 +30,7 @@ KernMemset16 (
   UINT16  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT16)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -46,7 +46,7 @@ KernMemset32 (
   UINT32  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT32)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -62,7 +62,7 @@ KernMemset64 (
   UINT64  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT64)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -78,7 +78,7 @@ VolatileKernMemset8 (
   volatile UINT8  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT8)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -94,7 +94,7 @@ VolatileKernMemset16 (
   volatile UINT16  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT16)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -110,7 +110,7 @@ VolatileKernMemset32 (
   volatile UINT32  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT32)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -126,7 +126,7 @@ VolatileKernMemset64 (
   volatile UINT64  *Dest = PTR;
 
   while (Count--) {
-    *Dest++ = (UINT64)Value;
+    *Dest++ = Value;
   }
 
   return PTR;
@@ -147,8 +147,25 @@ KernCopyMem (
   }
 }
 
-// VOID *
-// kmalloc ( IN UINTN Size )
-// {
+//
+//  TODO:   Implement an algorithm for
+//          finding a suitable frame for allocation.
+//
+VOID *
+__FindSuitableFrame (
+  IN UINTN  Size,
+  IN UINTN  NumberOfPages
+  )
+{
+  
+}
 
-// }
+//
+//  TODO:   Implement malloc.
+//
+VOID *
+kmalloc (
+  IN UINTN  Size
+  )
+{
+}
