@@ -56,7 +56,6 @@ WriteSerialStr (
   )
 {
   ASSERT (_KernStrLen (String) != 0);
-  ASSERT (String[0] != '\0');
 
   CHAR8  *__LocalStrCpy;
 
