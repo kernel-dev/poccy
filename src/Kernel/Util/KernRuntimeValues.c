@@ -6,13 +6,17 @@
 #include <Uefi.h>
 
 #include <Library/UefiLib.h>
+#include <stdatomic.h>
 
 //
 //  Framebuffer related values
 //
-UINT32            ScreenRow = 1;
-UINT32            ScreenCol = 1;
-KERN_FRAMEBUFFER  *FB       = NULL;
+UINT32            ScreenRow         = 1;
+UINT32            ScreenCol         = 1;
+UINT32            FBWidth           = 0;
+UINT32            FBHeight          = 0;
+KERN_FRAMEBUFFER  *FB               = NULL;
+atomic_flag       VideoMemoryLocked = ATOMIC_FLAG_INIT;
 
 //
 //  Font related values

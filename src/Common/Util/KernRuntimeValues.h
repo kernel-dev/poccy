@@ -10,6 +10,7 @@
 #include <Uefi.h>
 
 #include <Library/UefiLib.h>
+#include <stdatomic.h>
 
 //
 //  Screen row.
@@ -20,6 +21,22 @@ extern UINT32  ScreenRow;
 //  Screen column.
 //
 extern UINT32  ScreenCol;
+
+//
+//  Framebuffer line width.
+//
+extern UINT32  FBWidth;
+
+//
+//  Framebuffer line height.
+//
+extern UINT32  FBHeight;
+
+//
+//  Whether or not a process
+//  is writing to the framebuffer memory space.
+//
+extern atomic_flag  VideoMemoryLocked;
 
 //
 //  KERN_FRAMEBUFFER pointer.
