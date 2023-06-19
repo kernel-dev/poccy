@@ -77,10 +77,6 @@ KernCreateMMap (
     return;
   }
 
-  kprint ("Start address of bitmap: ");
-  kprint (__DecimalToHex ((UINTN)Bitmap, TRUE));
-  kprint ("\n");
-
   while (
          (UINTN)Entry < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
          Entry->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
@@ -108,13 +104,15 @@ KernCreateMMap (
       //  and don't organise the memory map
       //  by their physical addresses.
       //
-      UINTN  Offset      = Entry->PhysicalStart / KERN_SIZE_OF_PAGE;
+      UINTN  Offset = Entry->PhysicalStart * (1 / KERN_SIZE_OF_PAGE);
 
-      for (UINTN i = 0; i < __Size; i++) {
-        *(Bitmap + Offset) = 0xFF;
-      }
+      KernMemset (
+        (VOID *)(Bitmap + Offset),
+        0xFF,
+        __Size
+        );
 
-      Index += __Size;
+      BitmapSize += __Size;
     }
 
 exit_bitmap_set:
