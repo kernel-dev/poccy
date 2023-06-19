@@ -8,6 +8,7 @@
 #include "../Common/Graphics/KernFontParser.h"
 #include "../Common/Util/KernRuntimeValues.h"
 #include "../Common/Util/KernString.h"
+#include "../Common/Util/KernUtil.h"
 #include "../Common/Drivers/IO/io.h"
 #include "../Common/Drivers/IO/serial.h"
 
@@ -17,7 +18,14 @@
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/MemoryAllocationLib.h>
 
-// Entry point for kernel
+typedef struct {
+  CHAR8    *Name;
+  CHAR8    *Owner;
+} House;
+
+//
+//  Kernel EP
+//
 VOID
 EfiMain (
   IN EFI_RUNTIME_SERVICES                         *RT,
@@ -29,6 +37,12 @@ EfiMain (
 {
   FB       = Framebuffer;
   FontFile = TerminalFont;
+
+  //
+  //  Create an internal Bitmap
+  //  representation of system memory.
+  //
+  KernCreateMMap (MemoryMap);
 
   //
   //  Clear the screen.
@@ -55,12 +69,30 @@ EfiMain (
   //
   kprint ("Hello, kernelOS!\n");
 
-  //
-  //  Create an internal Bitmap
-  //  representation of system memory.
-  //
-  KernCreateMMap (MemoryMap);
-  
+  House  *my_house = kmalloc (sizeof (House));
+
+  my_house->Name  = "My House";
+  my_house->Owner = "Me";
+
+  for (UINT32 Index = 0; Index < 5; Index++) {
+    WriteSerialStr ("On iter: ");
+    WriteSerialStr (_KernItoa (Index));
+    WriteSerialStr ("\n");
+
+    kprint ("House of name: ");
+    kprint (my_house->Name);
+    kprint (" is owned by ");
+    kprint (my_house->Owner);
+    kprint ("\n");
+  }
+
+  ScreenScrollTerminal ();
+  ScreenRow--;
+  ScreenScrollTerminal ();
+  ScreenRow--;
+
+  kprint ("Here we are again!\n");
+
   //
   //  Should never reach here.
   //  Will be removed later.
