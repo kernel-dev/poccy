@@ -8,7 +8,9 @@
 #include <Library/UefiLib.h>
 
 #define KERN_SIZE_OF_PAGE  4096
-#define DIV_ROUNDUP(x, y)  ((x + y - 1) / y)
+
+#define DIV_ROUNDUP(x, y)       ((x + y - 1) / y)
+#define GET_NUM_OF_PAGES(Size)  DIV_ROUNDUP (Size, KERN_SIZE_OF_PAGE)
 
 /**
     Fills the provided memory blocks
@@ -21,61 +23,10 @@
     @retval     VOID*   The modified pointer.
  **/
 VOID *
-KernMemset8 (
+KernMemset (
   IN  VOID   *PTR,
-  IN  INT8   Value,
-  IN  UINT8  Count
-  );
-
-/**
-    Fills the provided memory blocks
-    with the provided Value for Count bytes.
-
-    @param[in]  PTR     The pointer to the base address of the location.
-    @param[in]  Value   The value to fill the memory block with.
-    @param[in]  Count   The size of Value in bytes.
-
-    @retval     VOID*   The modified pointer.
- **/
-VOID *
-KernMemset16 (
-  IN  VOID    *PTR,
-  IN  INT16   Value,
-  IN  UINT16  Count
-  );
-
-/**
-    Fills the provided memory blocks
-    with the provided Value for Count bytes.
-
-    @param[in]  PTR     The pointer to the base address of the location.
-    @param[in]  Value   The value to fill the memory block with.
-    @param[in]  Count   The size of Value in bytes.
-
-    @retval     VOID*   The modified pointer.
- **/
-VOID *
-KernMemset32 (
-  IN  VOID    *PTR,
-  IN  INT32   Value,
-  IN  UINT32  Count
-  );
-
-/**
-    Fills the provided memory blocks
-    with the provided Value for Count bytes.
-
-    @param[in]  PTR     The pointer to the base address of the location.
-    @param[in]  Value   The value to fill the memory block with.
-    @param[in]  Count   The size of Value in bytes.
-
-    @retval     VOID*   The modified pointer.
- **/
-VOID *
-KernMemset64 (
-  IN  VOID    *PTR,
-  IN  INT64   Value,
-  IN  UINT64  Count
+  IN  INTN   Value,
+  IN  UINTN  Count
   );
 
 /**
@@ -91,64 +42,7 @@ KernMemset64 (
     @retval     VOID*   The modified pointer.
  **/
 VOID *
-VolatileKernMemset8 (
-  IN  VOID   *PTR,
-  IN  INT8   Value,
-  IN  UINT8  Count
-  );
-
-/**
-    Fills the provided memory blocks
-    with the provided Value for Count bytes.
-
-    This implementation does a volatile write.
-
-    @param[in]  PTR     The pointer to the base address of the location.
-    @param[in]  Value   The value to fill the memory block with.
-    @param[in]  Count   The size of Value in bytes.
-
-    @retval     VOID*   The modified pointer.
- **/
-VOID *
-VolatileKernMemset16 (
-  IN  VOID    *PTR,
-  IN  INT16   Value,
-  IN  UINT16  Count
-  );
-
-/**
-    Fills the provided memory blocks
-    with the provided Value for Count bytes.
-
-    This implementation does a volatile write.
-
-    @param[in]  PTR     The pointer to the base address of the location.
-    @param[in]  Value   The value to fill the memory block with.
-    @param[in]  Count   The size of Value in bytes.
-
-    @retval     VOID*   The modified pointer.
- **/
-VOID *
-VolatileKernMemset32 (
-  IN  VOID    *PTR,
-  IN  INT32   Value,
-  IN  UINT32  Count
-  );
-
-/**
-    Fills the provided memory blocks
-    with the provided Value for Count bytes.
-
-    This implementation does a volatile write.
-
-    @param[in]  PTR     The pointer to the base address of the location.
-    @param[in]  Value   The value to fill the memory block with.
-    @param[in]  Count   The size of Value in bytes.
-
-    @retval     VOID*   The modified pointer.
- **/
-VOID *
-VolatileKernMemset64 (
+VolatileKernMemset (
   IN  VOID    *PTR,
   IN  INT64   Value,
   IN  UINT64  Count
@@ -162,7 +56,7 @@ VolatileKernMemset64 (
     @param[in]  Source          The source buffer (the data).
     @param[in]  Size            The size of the Source buffer (in bytes).
  **/
-VOID
+VOID *
 KernCopyMem (
   IN  VOID    *Destination,
   IN  VOID    *Source,
@@ -170,18 +64,20 @@ KernCopyMem (
   );
 
 /**
-    Finds a matching frame for the requested size
-    of data to be stored.
+    Copies the Source buffer
+    into the specified destination.
 
-    @param[in]  Size            The size requested.
-    @param[in]  NumberOfPages   The number of pages to allocate.
+    This implementation does a volatile write.
 
-    @returns    VOID*           The pointer to the start of the frame.
+    @param[in]  Destination     The destination to copy the buffer into.
+    @param[in]  Source          The source buffer (the data).
+    @param[in]  Size            The size of the Source buffer (in bytes).
  **/
 VOID *
-__FindSuitableFrame (
-  IN  UINTN  Size,
-  IN  UINTN  NumberOfPages
+KernMemMove (
+  IN VOID        *Destination,
+  IN CONST VOID  *Source,
+  IN UINTN       Count
   );
 
 /**
