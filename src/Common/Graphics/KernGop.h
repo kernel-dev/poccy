@@ -11,15 +11,15 @@
     framebuffer to the kernel's EP.
  **/
 typedef struct {
-    EFI_PHYSICAL_ADDRESS                FramebufferBase;    // The base address of the framebuffer.
-    EFI_PHYSICAL_ADDRESS                FramebufferSize;    // The total size of the framebuffer memory space (max address = FramebufferBase + FramebufferSize).
-    UINT32                              HorizontalRes;      // The horizontal resolution of this mode.
-    UINT32                              VerticalRes;        // The vertical resolution of this mode.
-    UINT32                              PPS;                // Pixels Per Scanline.
-    UINT64                              BPP;                // The "bytes per pixel" value.
-    UINT64                              Pitch;              // Density of the pixel (BPP * PPS).
-    EFI_PIXEL_BITMASK                   PixelBitmask;       // The pixel definition of the physical framebuffer.
-    UINT32                              CurrentMode;        // The index of the wanted mode.
+  EFI_PHYSICAL_ADDRESS    FramebufferBase;                  // The base address of the framebuffer.
+  EFI_PHYSICAL_ADDRESS    FramebufferSize;                  // The total size of the framebuffer memory space (max address = FramebufferBase + FramebufferSize).
+  UINT32                  HorizontalRes;                    // The horizontal resolution of this mode.
+  UINT32                  VerticalRes;                      // The vertical resolution of this mode.
+  UINT32                  PPS;                              // Pixels Per Scanline.
+  UINT64                  BPP;                              // The "bytes per pixel" value.
+  UINT64                  Pitch;                            // Density of the pixel (BPP * PPS).
+  EFI_PIXEL_BITMASK       PixelBitmask;                     // The pixel definition of the physical framebuffer.
+  UINT32                  CurrentMode;                      // The index of the wanted mode.
 } KERN_FRAMEBUFFER;
 
 /**
@@ -34,8 +34,9 @@ typedef struct {
  **/
 EFI_STATUS
 KernLocateGop (
-    IN  EFI_SYSTEM_TABLE                *SystemTable,
-    OUT EFI_GRAPHICS_OUTPUT_PROTOCOL    *GOP);
+  IN  EFI_SYSTEM_TABLE              *SystemTable,
+  OUT EFI_GRAPHICS_OUTPUT_PROTOCOL  *GOP
+  );
 
 /**
     Obtains the current video mode.
@@ -48,9 +49,10 @@ KernLocateGop (
  **/
 EFI_STATUS
 KernGetVideoMode (
-    IN  EFI_GRAPHICS_OUTPUT_PROTOCOL            *GOP,
-    OUT EFI_GRAPHICS_OUTPUT_MODE_INFORMATION    *Info,
-    OUT UINTN                                   *SizeOfInfo);
+  IN  EFI_GRAPHICS_OUTPUT_PROTOCOL          *GOP,
+  OUT EFI_GRAPHICS_OUTPUT_MODE_INFORMATION  *Info,
+  OUT UINTN                                 *SizeOfInfo
+  );
 
 /**
     Checks if the provided video mode is
@@ -66,9 +68,10 @@ KernGetVideoMode (
  **/
 BOOLEAN
 KernModeAvailable (
-    IN UINT32                                   VideoMode,
-    IN UINTN                                    *SizeOfInfo,
-    IN EFI_GRAPHICS_OUTPUT_PROTOCOL             *GOP,
-    IN EFI_GRAPHICS_OUTPUT_MODE_INFORMATION     *Info);
+  IN UINT32                                VideoMode,
+  IN UINTN                                 *SizeOfInfo,
+  IN EFI_GRAPHICS_OUTPUT_PROTOCOL          *GOP,
+  IN EFI_GRAPHICS_OUTPUT_MODE_INFORMATION  *Info
+  );
 
 #endif /* KernGop.h */
