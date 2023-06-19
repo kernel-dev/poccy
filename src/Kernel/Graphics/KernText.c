@@ -3,6 +3,7 @@
 #include "../../Common/Graphics/KernGraphics.h"
 #include "../../Common/Graphics/KernText.h"
 #include "../../Common/Graphics/KernFontParser.h"
+#include "../../Common/Memory/KernMem.h"
 #include "../../Common/Util/KernString.h"
 #include "../../Common/Util/KernRuntimeValues.h"
 
@@ -22,12 +23,6 @@ kprint (
   ASSERT (Len > 0);
 
   for (UINTN Index = 0; Index < Len; Index++) {
-    if (Str[Index] == '\n') {
-      ScreenCol = 1;
-      ScreenRow++;
-      continue;
-    }
-
     PutChar (Str[Index]);
   }
 }
@@ -59,6 +54,13 @@ PutChar (
   IN CHAR8  Char
   )
 {
+  if (Char == '\n') {
+    ScreenCol = 1;
+    ScreenRow++;
+
+    return;
+  }
+
   UINT8  *GlyphStart = ((UINT8 *)FontFile) + sizeof (PSF_FONT_HDR) + (Char * 16);
   UINT8  Glyph[16];
 
@@ -82,8 +84,17 @@ PutChar (
 
   ScreenCol++;
 
-  if (ScreenCol >= FB->HorizontalRes) {
+  if (ScreenCol >= FBWidth) {
     ScreenCol = 1;
     ScreenRow++;
+  }
+
+  if (ScreenRow >= FBHeight) {
+    VideoMemoryLockAcquire (&VideoMemoryLocked);
+    ScreenScrollTerminal ();
+    VideoMemoryLockRelease (&VideoMemoryLocked);
+
+    ScreenRow--;
+    return PutChar (Char);
   }
 }
