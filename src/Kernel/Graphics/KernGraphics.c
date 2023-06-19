@@ -6,7 +6,25 @@
 #include <Uefi.h>
 
 #include <Library/UefiLib.h>
-#include <Library/DebugLib.h>
+#include <stdatomic.h>
+
+VOID
+VideoMemoryLockAcquire (
+  atomic_flag  *Lock
+  )
+{
+  while (atomic_flag_test_and_set_explicit (Lock, memory_order_acquire)) {
+    __asm__ __volatile__ ("pause");
+  }
+}
+
+VOID
+VideoMemoryLockRelease (
+  atomic_flag  *Lock
+  )
+{
+  atomic_flag_clear_explicit (Lock, memory_order_release);
+}
 
 VOID
 ScreenClearTerminal (
@@ -17,7 +35,7 @@ ScreenClearTerminal (
   //  Fill the entirety of the framebuffer
   //  memory space with black pixels (0x0).
   //
-  VolatileKernMemset32 (
+  VolatileKernMemset (
     (UINT32 *)FB->FramebufferBase,
     0x0,
     FB->FramebufferSize
@@ -57,12 +75,14 @@ ScreenPutPixel (
   IN UINT32  Color
   )
 {
+  VideoMemoryLockAcquire (&VideoMemoryLocked);
+
   //
   //  Locate the corresponding memory space
   //  based on the (X, Y) coordinates.
   //
   UINT64  Address = (UINT64)(
-                             (UINT32)FB->FramebufferBase + (Y * (1360 * FB->BPP)) + (FB->BPP * X)
+                             (UINT32)FB->FramebufferBase + (Y * (FB->HorizontalRes* FB->BPP)) + (FB->BPP * X)
                              );
 
   //
@@ -78,4 +98,23 @@ ScreenPutPixel (
   //  with the provided BGRA (32-bit) color.
   //
   *((volatile UINT64 *)(Address)) = Color;
+
+  VideoMemoryLockRelease (&VideoMemoryLocked);
+}
+
+VOID
+ScreenScrollTerminal (
+  VOID
+  )
+{
+  UINTN  LineWidth  = FB->HorizontalRes * FB->BPP;
+  UINTN  LineHeight = FB->VerticalRes * FB->BPP;
+
+  for (UINTN Y = 0; Y < FBHeight; Y++) {
+    KernMemMove (
+      (VOID *)(FB->FramebufferBase + (Y * FBWidth)),
+      (VOID *)(FB->FramebufferBase + ((Y + ExtFontHdr.Height) * FBWidth)),
+      FBWidth
+      );
+  }
 }

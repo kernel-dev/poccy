@@ -5,13 +5,34 @@
 
 #include <Uefi.h>
 #include <Library/UefiLib.h>
+#include <stdatomic.h>
+
+/**
+    Locks the framebuffer memory space
+    spinlock.
+ **/
+VOID
+VideoMemoryLockAcquire (
+  atomic_flag  *Lock
+  );
+
+/**
+    Unlocks the framebuffer memory space
+    spinlock.
+ **/
+VOID
+VideoMemoryLockRelease (
+  atomic_flag  *Lock
+  );
 
 /**
     Overwrites the entire framebuffer memory
     space with black pixels — [clears the screen].
  **/
-VOID 
-ScreenClearTerminal (VOID);
+VOID
+ScreenClearTerminal (
+  VOID
+  );
 
 /**
     Fills a rectangle (on the screen)
@@ -27,12 +48,12 @@ ScreenClearTerminal (VOID);
  **/
 VOID
 ScreenFillRectangle (
-    IN UINT32           X,
-    IN UINT32           Y,
-    IN UINT32           Width,
-    IN UINT32           Height,
-    IN UINT32           Color
-);
+  IN UINT32  X,
+  IN UINT32  Y,
+  IN UINT32  Width,
+  IN UINT32  Height,
+  IN UINT32  Color
+  );
 
 /**
     Places a pixel at the specified
@@ -45,10 +66,17 @@ ScreenFillRectangle (
  **/
 VOID
 ScreenPutPixel (
-    IN UINT32           X,
-    IN UINT32           Y,
-    IN UINT32           Color
-);
+  IN UINT32  X,
+  IN UINT32  Y,
+  IN UINT32  Color
+  );
 
+/**
+    Scrolls the terminal by one row.
+ **/
+VOID
+ScreenScrollTerminal (
+  VOID
+  );
 
 #endif /* KernGraphics.h */
