@@ -4,3 +4,4 @@ hda-contents/*
 .DS_Store
 .vscode
 *.o
+*.pdb
