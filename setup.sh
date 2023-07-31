@@ -1,6 +1,11 @@
 # . /Users/user/Documents/audk/BootloaderPkg/setup.sh
 
-cd /Users/user/Documents/audk/KernelOSPkg
+# echo "Compiling OVMF.fd and Bootloader..."
+# PYTHON_COMMAND=/usr/bin/python3 . $PARPATH/BootloaderPkg/setup.sh
+
+# Replace ZIG_PATH with the appropriate path
+# to the Zig compiler here.
+ZIG_PATH=$HOME/Downloads/zig-macos-x86_64-0.11.0-dev.4000+3022c525e/zig
 
 rm -rf kernel.o 2> /dev/null
 rm -rf hda-contents/kernel.bin* 2> /dev/null
