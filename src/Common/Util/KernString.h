@@ -33,7 +33,7 @@ _KernReverseStr (
     Stringifies an integer value.
 
     @param[in]   Num         The integer to stringify.
-    
+
     @retval      CHAR8*     The stringified integer.
  **/
 CHAR8 *
@@ -51,8 +51,8 @@ _KernItoa (
  **/
 CHAR8 *
 __DecimalToHex (
-  IN  UINTN     Num,
-  IN  BOOLEAN   Capitals
+  IN  UINTN    Num,
+  IN  BOOLEAN  Capitals
   );
 
 #endif /* KernString.h */

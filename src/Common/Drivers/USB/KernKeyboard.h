@@ -6,7 +6,7 @@
 #include <Library/UefiLib.h>
 
 /**
-    Enum of key press down codes. 
+    Enum of key press down codes.
  **/
 enum PS2_KEYS {
   ESCAPE          = 0x01,
@@ -70,7 +70,7 @@ enum PS2_KEYS {
 } KEY_PRESS_DOWN;
 
 /**
-    Enum of key release codes. 
+    Enum of key release codes.
  **/
 enum PS2_KEYS {
   ESCAPE          = 0x81,

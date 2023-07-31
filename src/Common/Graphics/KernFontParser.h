@@ -27,11 +27,11 @@ typedef struct {
     usage to avoid redundancy.
  **/
 typedef struct  {
-  UINT32          NumOfGlyphs;      // The number of glyphs in this font file (bit 0 = 512, else 256).
-  BOOLEAN         UnicodeTable;     // Whether or not this PSF file has a unicode table (bit 1 of Hdr->Flags).
-  BOOLEAN         GlyphSeqs;        // Whether or not the encoding table contains character sequences (bit 2 of Hdr->Flags).
-  UINT32          Width;            // Width of a glyph.
-  UINT32          Height;           // Height (bytes per row) of a glyph.
+  UINT32     NumOfGlyphs;           // The number of glyphs in this font file (bit 0 = 512, else 256).
+  BOOLEAN    UnicodeTable;          // Whether or not this PSF file has a unicode table (bit 1 of Hdr->Flags).
+  BOOLEAN    GlyphSeqs;             // Whether or not the encoding table contains character sequences (bit 2 of Hdr->Flags).
+  UINT32     Width;                 // Width of a glyph.
+  UINT32     Height;                // Height (bytes per row) of a glyph.
 } PSF_FONT_HDR_EXTENDED;
 
 /**

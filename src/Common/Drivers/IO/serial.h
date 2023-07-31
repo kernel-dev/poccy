@@ -28,7 +28,7 @@ UINTN
 IsTransmitEmpty (
   VOID
   );
-  
+
 /**
  * Writes a character to COM1.
  *

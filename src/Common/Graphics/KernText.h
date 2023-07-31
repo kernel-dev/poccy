@@ -14,8 +14,8 @@
  **/
 VOID
 kprint (
-    IN CHAR8            *Str
-);
+  IN CHAR8  *Str
+  );
 
 /**
     Custom implementation of `printf()`
@@ -24,9 +24,9 @@ kprint (
  **/
 VOID
 kprintf (
-    IN CONST CHAR8           *Fmt,
-    ...
-);
+  IN CONST CHAR8  *Fmt,
+  ...
+  );
 
 /**
     Puts a character to the screen.
@@ -35,7 +35,7 @@ kprintf (
  **/
 VOID
 PutChar (
-    IN CHAR8            Char
-);
+  IN CHAR8  Char
+  );
 
 #endif /* KernText.h */

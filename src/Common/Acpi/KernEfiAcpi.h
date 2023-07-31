@@ -9,15 +9,15 @@
     header, according to the ACPI 6.5 specification.
  **/
 typedef struct {
-    UINT32      Signature;
-    UINT32      Length;
-    UINT8       Revision;
-    UINT8       Checksum;
-    UINT8       OemId[6];
-    UINT8       OemTableId[8];
-    UINT8       OemRevision[4];
-    UINT8       CreatorId[4];
-    UINT8       CreatorRevision[4];
+  UINT32    Signature;
+  UINT32    Length;
+  UINT8     Revision;
+  UINT8     Checksum;
+  UINT8     OemId[6];
+  UINT8     OemTableId[8];
+  UINT8     OemRevision[4];
+  UINT8     CreatorId[4];
+  UINT8     CreatorRevision[4];
 } SDT_HEADER;
 
 /**
@@ -25,8 +25,8 @@ typedef struct {
     according to the ACPI 6.5 specification.
  **/
 typedef struct {
-    SDT_HEADER  Sdt;
-    UINT64      BytecodeCount;
+  SDT_HEADER    Sdt;
+  UINT64        BytecodeCount;
 } ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE;
 
 /**
@@ -43,8 +43,9 @@ typedef struct {
  **/
 EFI_STATUS
 EfiLocateFadtFromXsdt (
-    IN  EFI_ACPI_DESCRIPTION_HEADER  *Xsdt,
-    OUT EFI_ACPI_COMMON_HEADER       **Fadt);
+  IN  EFI_ACPI_DESCRIPTION_HEADER  *Xsdt,
+  OUT EFI_ACPI_COMMON_HEADER       **Fadt
+  );
 
 /**
     Obtains all necessary tables... (using the RSDP initially)
@@ -64,10 +65,11 @@ EfiLocateFadtFromXsdt (
  **/
 EFI_STATUS
 EfiGetTables (
-    OUT EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER **Rsdp,
-    OUT EFI_ACPI_DESCRIPTION_HEADER                  **Rsdt,
-    OUT EFI_ACPI_DESCRIPTION_HEADER                  **Xsdt,
-    OUT EFI_ACPI_2_0_FIXED_ACPI_DESCRIPTION_TABLE    **Fadt,
-    OUT ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE  **Dsdt);
+  OUT EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER  **Rsdp,
+  OUT EFI_ACPI_DESCRIPTION_HEADER                   **Rsdt,
+  OUT EFI_ACPI_DESCRIPTION_HEADER                   **Xsdt,
+  OUT EFI_ACPI_2_0_FIXED_ACPI_DESCRIPTION_TABLE     **Fadt,
+  OUT ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE   **Dsdt
+  );
 
 #endif /* KernEfiAcpi.h */

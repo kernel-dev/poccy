@@ -14,8 +14,8 @@
  **/
 UINT64
 Base10Log (
-    IN  UINT32  Value
-);
+  IN  UINT32  Value
+  );
 
 /**
     Implementation of a typical logarithm
@@ -28,9 +28,9 @@ Base10Log (
  **/
 UINT64
 LogarithmFindExponent (
-    IN UINT32   Base,
-    IN UINT32   Value
-);
+  IN UINT32  Base,
+  IN UINT32  Value
+  );
 
 /**
     Finds the base of a logarithm
@@ -45,9 +45,9 @@ LogarithmFindExponent (
  **/
 UINT64
 LogarithmFindBase (
-    IN UINT32   Value,
-    IN UINT32   Exponent
-);
+  IN UINT32  Value,
+  IN UINT32  Exponent
+  );
 
 /**
     Finds the result of a logarithm
@@ -60,10 +60,8 @@ LogarithmFindBase (
  **/
 UINT64
 LogarithmFindResult (
-    IN UINT32   Base,
-    IN UINT32   Exponent
-);
-
-
+  IN UINT32  Base,
+  IN UINT32  Exponent
+  );
 
 #endif /* Logarithm.h */

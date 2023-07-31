@@ -20,30 +20,30 @@ AllocateBitmap (
   BOOLEAN                SizeUnspecified = __SizeNeeded == 0;
 
   while (
-         (UINTN)Desc < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
-         Desc->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
-         Desc->PhysicalStart < 2147483648
-         )
+    (UINTN)Desc < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
+    Desc->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
+    Desc->PhysicalStart < 2147483648
+    )
   {
     if (SizeUnspecified) {
       BitmapSize += DIV_ROUNDUP (Desc->NumberOfPages, 8);
     }
 
     Desc = (EFI_MEMORY_DESCRIPTOR *)NEXT_MEMORY_DESCRIPTOR (
-                                      Desc,
-                                      MemoryMap->DescriptorSize
-                                      );
+      Desc,
+      MemoryMap->DescriptorSize
+      );
 
     if (SizeUnspecified) {
       continue;
     }
 
     if (
-        (Desc->Type != EfiConventionalMemory) &&
-        (Desc->Type != EfiLoaderCode) &&
-        (Desc->Type != EfiLoaderData) &&
-        (Desc->Type != EfiBootServicesData)
-        )
+      (Desc->Type != EfiConventionalMemory) &&
+      (Desc->Type != EfiLoaderCode) &&
+      (Desc->Type != EfiLoaderData) &&
+      (Desc->Type != EfiBootServicesData)
+      )
     {
       continue;
     }
@@ -78,18 +78,18 @@ KernCreateMMap (
   }
 
   while (
-         (UINTN)Entry < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
-         Entry->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
-         Entry->PhysicalStart < 2147483648
-         )
+    (UINTN)Entry < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
+    Entry->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
+    Entry->PhysicalStart < 2147483648
+    )
   {
     if (
-        (Entry->Type == EfiConventionalMemory) ||
-        (Entry->Type == EfiLoaderCode) ||
-        (Entry->Type == EfiLoaderData) ||
-        (Entry->Type == EfiBootServicesData) ||
-        (Entry->Type == EfiBootServicesCode)
-        )
+      (Entry->Type == EfiConventionalMemory) ||
+      (Entry->Type == EfiLoaderCode) ||
+      (Entry->Type == EfiLoaderData) ||
+      (Entry->Type == EfiBootServicesData) ||
+      (Entry->Type == EfiBootServicesCode)
+      )
     {
       if (Entry->PhysicalStart == (UINTN)Bitmap) {
         goto exit_bitmap_set;
@@ -106,11 +106,14 @@ KernCreateMMap (
       //
       UINTN  Offset = Entry->PhysicalStart * (1 / KERN_SIZE_OF_PAGE);
 
-      KernMemset (
-        (VOID *)(Bitmap + Offset),
-        0xFF,
-        __Size
-        );
+      for (
+        UINTN Index = Entry->PhysicalStart;
+        Index < Entry->PhysicalStart + Entry->NumberOfPages * KERN_SIZE_OF_PAGE;
+        Index += KERN_SIZE_OF_PAGE
+        )
+      {
+        UINTN  ByteFree = Index / KERN_SIZE_OF_PAGE / 8;
+        UINTN  Bit      = (Index / KERN_SIZE_OF_PAGE) % 8;
 
       BitmapSize += __Size;
     }

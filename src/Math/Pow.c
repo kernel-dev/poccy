@@ -19,9 +19,9 @@ PowInt64 (
   //  then the result is 1.
   //
   if (
-      (Value == 1) ||
-      (Exponent == 0)
-      )
+    (Value == 1) ||
+    (Exponent == 0)
+    )
   {
     return 1;
   }

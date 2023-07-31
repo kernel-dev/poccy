@@ -7,8 +7,8 @@
 
 INT64
 PowInt64 (
-    IN INT32   Value,
-    IN INT32   Exponent
-);
+  IN INT32  Value,
+  IN INT32  Exponent
+  );
 
 #endif /* Pow.h */

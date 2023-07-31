@@ -14,9 +14,9 @@
  **/
 VOID
 OutB8 (
-    IN UINT16  Port,
-    IN UINT8   Value
-);
+  IN UINT16  Port,
+  IN UINT8   Value
+  );
 
 /**
     Sends the 2-byte value to
@@ -27,9 +27,9 @@ OutB8 (
  **/
 VOID
 OutB16 (
-    IN UINT16  Port,
-    IN UINT16  Value
-);
+  IN UINT16  Port,
+  IN UINT16  Value
+  );
 
 /**
     Sends the 4-byte value to
@@ -40,9 +40,9 @@ OutB16 (
  **/
 VOID
 OutB32 (
-    IN UINT16  Port,
-    IN UINT32  Value
-);
+  IN UINT16  Port,
+  IN UINT32  Value
+  );
 
 /**
     Receives a 1-byte value from
@@ -53,8 +53,9 @@ OutB32 (
     @retval     UINT8   The read 1-byte value.
  **/
 UINT8
-InB8 ( IN UINT16 Port );
-
+InB8 (
+  IN UINT16  Port
+  );
 
 /**
     Receives a 2-byte value from
@@ -65,7 +66,9 @@ InB8 ( IN UINT16 Port );
     @retval     UINT16  The read 2-byte value.
  **/
 UINT16
-InB16 ( IN UINT16 Port );
+InB16 (
+  IN UINT16  Port
+  );
 
 /**
     Receives a 4-byte value from
@@ -76,14 +79,18 @@ InB16 ( IN UINT16 Port );
     @retval     UINT32  The read 4-byte value.
  **/
 UINT32
-InB32 ( IN UINT16 Port );
+InB32 (
+  IN UINT16  Port
+  );
 
 /**
     Waits for a very, very small
     amount of time. (1-4µs)
  **/
 VOID
-IoWait (VOID);
+IoWait (
+  VOID
+  );
 
 /**
     Returns a boolean indicating
@@ -92,14 +99,16 @@ IoWait (VOID);
     @retval     BOOLEAN     Whether or not interrupts are enabled.
  **/
 BOOLEAN
-IRQsEnabled (VOID);
-
-
+IRQsEnabled (
+  VOID
+  );
 
 /**
     Initializes the keyboard handler.
  **/
 VOID
-HandlerInitKeyboard (VOID);
+HandlerInitKeyboard (
+  VOID
+  );
 
 #endif /* io.h */

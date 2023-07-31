@@ -82,8 +82,8 @@ ScreenPutPixel (
   //  based on the (X, Y) coordinates.
   //
   UINT64  Address = (UINT64)(
-                             (UINT32)FB->FramebufferBase + (Y * (FB->HorizontalRes* FB->BPP)) + (FB->BPP * X)
-                             );
+    (UINT32)FB->FramebufferBase + (Y * (FB->HorizontalRes* FB->BPP)) + (FB->BPP * X)
+    );
 
   //
   //  Cannot write pixel values to memory that

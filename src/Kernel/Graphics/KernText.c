@@ -36,15 +36,14 @@ kprintf (
   ...
   )
 {
-  // va_list args;
-  // va_start (args, Fmt);
+  va_list  args;
 
-  // CHAR8 Char;
+  va_start (args, Fmt);
 
-  // for (Char = *Fmt; Char != '\0'; Char++)
-  // {
+  CHAR8  Char;
 
-  // }
+  for (Char = *Fmt; Char != '\0'; Char++) {
+  }
 
   // va_end (args);
 }

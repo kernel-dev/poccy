@@ -12,7 +12,7 @@
     ((ENTRY->NumberOfPages - OFFSET) * KERN_SIZE_OF_PAGE)    \
     )
 
-#define CALC_SIZE_OF_FRAME(ENTRY) ENTRY->NumberOfPages * KERN_SIZE_OF_PAGE
+#define CALC_SIZE_OF_FRAME(ENTRY)  ENTRY->NumberOfPages * KERN_SIZE_OF_PAGE
 
 /**
     Structure defining a physical memory page.
