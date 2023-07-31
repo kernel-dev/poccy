@@ -1,5 +1,6 @@
 #include "../../Common/Memory/KernMem.h"
 #include "../../Common/Util/KernRuntimeValues.h"
+#include "../../Common/Util/KernString.h"
 
 #include <Uefi.h>
 
@@ -60,11 +61,11 @@ KernCopyMem (
   UINT8  *Src  = (UINT8 CONST *)Source;
 
   if (
-      (Size >= sizeof (long) * 2) &&
-      (((UINTN)Src & (sizeof (long) - 1)) == ((UINTN)Dest & (sizeof (long) - 1)))
-      )
+    (Size >= sizeof (long) * 2) &&
+    (((UINTN)Src & (sizeof (long) - 1)) == ((UINTN)Dest & (sizeof (long) - 1)))
+    )
   {
-    while ((UINTN)Src & (sizeof (long) - 1) != 0) {
+    while (((UINTN)Src & (sizeof (long) - 1)) != 0) {
       *Dest++ = *Src++;
 
       Size--;
@@ -136,19 +137,61 @@ kmalloc (
     UINT8  *Frame = Bitmap + Index;
 
     if (CurrCntgFreePages == NumberOfPages) {
+pages_search_success:
       break;
     }
 
-    if ((*Frame) == 0xFF) {
-      if (Start == NULL) {
-        Start = Frame;
+    for (UINTN Bit = 0; Bit < 8; Bit++) {
+      if (CurrCntgFreePages) {
+        goto pages_search_success;
       }
 
-      CurrCntgFreePages++;
-    } else {
-      Start             = NULL;
-      CurrCntgFreePages = 0;
+      UINTN  Value = *Frame;
+
+      if (((Value >> Bit) & 1) == 1) {
+        if (Index < 0x10000) {
+          continue;
+        }
+
+ #ifdef DEBUG_MEMORY
+        kprint ("[DEBUG::MEMORY::kmalloc()]: PAGE AT ADDRESS ");
+        kprint (__DecimalToHex ((UINTN)Frame * 4096, TRUE));
+        kprint (" IS AVAILABLE FOR USAGE!\n");
+ #endif
+
+        if (Start == NULL) {
+          Start = (VOID *)((UINTN)Frame * 0x1000);
+        }
+
+        CurrCntgFreePages++;
+      } else {
+ #ifdef DEBUG_MEMORY
+        kprint ("[DEBUG::MEMORY::kmalloc()]: ");
+        kprint (_KernItoa (CurrCntgFreePages));
+        kprint ("-ITH PAGE IS TAKEN (AT ADDRESS ");
+        kprint (__DecimalToHex ((UINTN)Frame * 0x1000, TRUE));
+        kprint (") GOING NEXT BIT OVER...\n");
+ #endif
+
+        CurrCntgFreePages = 0;
+        Start             = NULL;
+      }
     }
+  }
+
+  //
+  //  Zero the memory.
+  //
+  KernMemset (
+    Start,
+    0x00,
+    NumberOfPages * KERN_SIZE_OF_PAGE
+    );
+
+  for (UINTN Bit = 0; Bit < NumberOfPages; Bit++) {
+    UINTN  Index = (UINTN)Start / 4096;
+
+    Bitmap[Index] &= ~(1 << (Bit % 8));
   }
 
   return Start;
