@@ -11,7 +11,7 @@ OutB8 (
   )
 {
   asm volatile (
-      "outb %0, %1" : : "a"(Value), "Nd"(Port) : "memory"
+          "outb %0, %1" : : "a"(Value), "Nd"(Port) : "memory"
   );
 }
 
@@ -23,9 +23,9 @@ InB8 (
   UINT8  Ret;
 
   asm volatile ( "inb %1, %0"
-                 : "=a"(Ret)
-                 : "Nd"(Port)
-                 : "memory");
+          : "=a"(Ret)
+          : "Nd"(Port)
+          : "memory");
 
   return Ret;
 }

@@ -16,9 +16,9 @@
     Basic header representing a PSF font (v1) file.
  **/
 typedef struct {
-  UINT16    Magic;     // 2-byte magic number of the PSF font header.
-  UINT8     Flags;     // 1-byte flag defining the properties of the character set.
-  UINT8     Height;    // 1-byte value defining the height (size; bytes per row) of a character.
+  UINT16    Magic;   // 2-byte magic number of the PSF font header.
+  UINT8     Flags;   // 1-byte flag defining the properties of the character set.
+  UINT8     Height;  // 1-byte value defining the height (size; bytes per row) of a character.
 } PSF_FONT_HDR;
 
 /**
@@ -26,12 +26,12 @@ typedef struct {
     font file; mostly useful for internal
     usage to avoid redundancy.
  **/
-typedef struct  {
-  UINT32     NumOfGlyphs;           // The number of glyphs in this font file (bit 0 = 512, else 256).
-  BOOLEAN    UnicodeTable;          // Whether or not this PSF file has a unicode table (bit 1 of Hdr->Flags).
-  BOOLEAN    GlyphSeqs;             // Whether or not the encoding table contains character sequences (bit 2 of Hdr->Flags).
-  UINT32     Width;                 // Width of a glyph.
-  UINT32     Height;                // Height (bytes per row) of a glyph.
+typedef struct {
+  UINT32     NumOfGlyphs;         // The number of glyphs in this font file (bit 0 = 512, else 256).
+  BOOLEAN    UnicodeTable;        // Whether or not this PSF file has a unicode table (bit 1 of Hdr->Flags).
+  BOOLEAN    GlyphSeqs;           // Whether or not the encoding table contains character sequences (bit 2 of Hdr->Flags).
+  UINT32     Width;               // Width of a glyph.
+  UINT32     Height;              // Height (bytes per row) of a glyph.
 } PSF_FONT_HDR_EXTENDED;
 
 /**

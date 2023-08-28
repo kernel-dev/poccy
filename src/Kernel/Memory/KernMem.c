@@ -149,12 +149,8 @@ pages_search_success:
       UINTN  Value = *Frame;
 
       if (((Value >> Bit) & 1) == 1) {
-        if (Index < 0x10000) {
-          continue;
-        }
-
- #ifdef DEBUG_MEMORY
-        kprint ("[DEBUG::MEMORY::kmalloc()]: PAGE AT ADDRESS ");
+ #ifdef DEBUG_MEMORY_ALLOC
+        kprint ("[DEBUG::MEMORY::MEMORY_ALLOC]: PAGE AT ADDRESS ");
         kprint (__DecimalToHex ((UINTN)Frame * 4096, TRUE));
         kprint (" IS AVAILABLE FOR USAGE!\n");
  #endif
@@ -165,8 +161,8 @@ pages_search_success:
 
         CurrCntgFreePages++;
       } else {
- #ifdef DEBUG_MEMORY
-        kprint ("[DEBUG::MEMORY::kmalloc()]: ");
+ #ifdef DEBUG_MEMORY_ALLOC
+        kprint ("[DEBUG::MEMORY::MEMORY_ALLOC]: ");
         kprint (_KernItoa (CurrCntgFreePages));
         kprint ("-ITH PAGE IS TAKEN (AT ADDRESS ");
         kprint (__DecimalToHex ((UINTN)Frame * 0x1000, TRUE));

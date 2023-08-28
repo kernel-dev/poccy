@@ -18,10 +18,10 @@
     Structure defining a physical memory page.
  **/
 typedef struct {
-  EFI_PHYSICAL_ADDRESS    Address;          // Beginning physical address of this page.
-  UINT32                  Size;             // Size of this page.
-  VOID                    *Buffer;          // The data this page holds.
-  BOOLEAN                 Free;             // Whether or not this page is free to use.
+  EFI_PHYSICAL_ADDRESS    Address; // Beginning physical address of this page.
+  UINT32                  Size;    // Size of this page.
+  VOID                    *Buffer; // The data this page holds.
+  BOOLEAN                 Free;    // Whether or not this page is free to use.
 } KERN_PHYSICAL_PAGE;
 
 /**
@@ -29,20 +29,20 @@ typedef struct {
     of a process's virtual memory space.
  **/
 typedef struct {
-  KERN_PHYSICAL_PAGE    *Pages;             // An array of mapped physical pages for this VM.
-  UINT32                NumOfPages;         // The number of pages allocated for this VM.
-  UINT32                SizeOfPage;         // The size of each physical page.
-  UINT8                 ProcessId;          // The identification value of the process.
-}   InternalVMBlock;
+  KERN_PHYSICAL_PAGE    *Pages;     // An array of mapped physical pages for this VM.
+  UINT32                NumOfPages; // The number of pages allocated for this VM.
+  UINT32                SizeOfPage; // The size of each physical page.
+  UINT8                 ProcessId;  // The identification value of the process.
+} InternalVMBlock;
 
 /**
     Internal error codes for
     page faults.
  **/
 enum PageFaultReason {
-  OutOfMemory,          // Out of memory
-  InvalidAccess,        // Process accessed an invalid memory page.
-  InternalError         // Something went wrong internally.
+  OutOfMemory,            // Out of memory
+  InvalidAccess,          // Process accessed an invalid memory page.
+  InternalError           // Something went wrong internally.
 };
 
 /**
