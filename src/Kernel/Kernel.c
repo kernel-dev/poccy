@@ -1,22 +1,14 @@
-#include "../Common/Acpi/KernEfiAcpi.h"
-#include "../Common/Assert/KernAssert.h"
-#include "../Common/Memory/KernEfiMem.h"
-#include "../Common/Memory/KernMem.h"
-#include "../Common/Memory/KernMemoryManager.h"
-#include "../Common/Graphics/KernGop.h"
-#include "../Common/Graphics/KernGraphics.h"
-#include "../Common/Graphics/KernFontParser.h"
-#include "../Common/Util/KernRuntimeValues.h"
-#include "../Common/Util/KernString.h"
-#include "../Common/Util/KernUtil.h"
-#include "../Common/Drivers/IO/io.h"
-#include "../Common/Drivers/IO/serial.h"
+#include "Acpi/KernEfiAcpi.h"
+#include "Assert/KernAssert.h"
+#include "Memory/KernMem.h"
+#include "Util/KernString.h"
+#include "Drivers/PS2/PS2KeyboardDriver.h"
+#include "Interrupts/ApicHandler.h"
+#include "Interrupts/GDT.h"
 
 #include <Uefi.h>
 
 #include <Library/UefiLib.h>
-#include <Library/UefiBootServicesTableLib.h>
-#include <Library/MemoryAllocationLib.h>
 
 typedef struct {
   CHAR8    *Name;
@@ -39,12 +31,6 @@ EfiMain (
   FontFile = TerminalFont;
 
   //
-  //  Create an internal Bitmap
-  //  representation of system memory.
-  //
-  KernCreateMMap (MemoryMap);
-
-  //
   //  Clear the screen.
   //
   ScreenClearTerminal ();
@@ -65,39 +51,61 @@ EfiMain (
   InitSerial ();
 
   //
+  //  Create an internal Bitmap
+  //  representation of system memory.
+  //
+  KernCreateMMap (MemoryMap);
+
+  //
+  //    Initialize the GDT and IDT.
+  //
+  InitializeDescriptorTables ();
+
+  //
+  //  Enable the APIC if possible.
+  //
+  EnableAPIC ();
+
+  //
   //  Test print.
   //
   kprint ("Hello, kernelOS!\n");
 
   House  *my_house = kmalloc (sizeof (House));
 
-  my_house->Name  = "My House";
-  my_house->Owner = "Me";
+  if (my_house != NULL) {
+    my_house->Name  = "My House";
+    my_house->Owner = "Me2";
 
-  for (UINT32 Index = 0; Index < 5; Index++) {
-    WriteSerialStr ("On iter: ");
-    WriteSerialStr (_KernItoa (Index));
-    WriteSerialStr ("\n");
-
-    kprint ("House of name: ");
-    kprint (my_house->Name);
-    kprint (" is owned by ");
-    kprint (my_house->Owner);
-    kprint ("\n");
+    for (UINT32 Index = 0; Index < 5; Index++) {
+      kprint ("House of name: ");
+      kprint (my_house->Name);
+      kprint (" is owned by yours truly, ");
+      kprint (my_house->Owner);
+      kprint ("\n");
+    }
+  } else {
+ #ifdef DEBUG_MEMORY
+    kprint ("[DEBUG::MEMORY::MALLOC]: Failed to allocate memory for 'House' struct!\n");
+ #endif
   }
 
-  ScreenScrollTerminal ();
-  ScreenRow--;
-  ScreenScrollTerminal ();
-  ScreenRow--;
+  CHAR8  Key;
 
-  kprint ("Here we are again!\n");
+  while ((Key = ReadSerial ())) {
+    if ((UINTN)Key == 13) {
+      kprint ("\n");
+      continue;
+    }
+
+    PutChar (Key);
+  }
 
   //
   //  Should never reach here.
   //  Will be removed later.
   //
-  for ( ; ;) {
+  for ( ;;) {
     __asm__ ("hlt");
   }
 }
