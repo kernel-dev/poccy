@@ -64,21 +64,11 @@ _KernItoa (
 
   CHAR8  *Ptr = Buffer + MAX_DIGITS + 1;
 
-  if (Num >= 0) {
-    do {
-      *--Ptr = '0' + (Num % 10);
+  do {
+    *--Ptr = '0' + (Num % 10);
 
-      Num /= 10;
-    } while (Num != 0);
-  } else {
-    do {
-      *--Ptr = '0' - (Num % 10);
-
-      Num /= 10;
-    } while (Num != 0);
-
-    *--Ptr = '-';
-  }
+    Num /= 10;
+  } while (Num != 0);
 
   return Ptr;
 }
@@ -89,9 +79,7 @@ __DecimalToHex (
   IN  BOOLEAN  Capitals
   )
 {
-  if (Num < 0) {
-    return "";
-  }
+  ASSERT (Num >= 0);
 
   if (Num == 0) {
     return "0";
