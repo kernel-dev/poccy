@@ -81,8 +81,8 @@ ScreenPutPixel (
   //  Locate the corresponding memory space
   //  based on the (X, Y) coordinates.
   //
-  UINT64  Address = (UINT64)(
-    (UINT32)FB->FramebufferBase + (Y * (FB->HorizontalRes* FB->BPP)) + (FB->BPP * X)
+  UINTN  Address = (UINTN)(
+    (UINT32)FB->FramebufferBase + (Y * (FB->HorizontalRes * FB->BPP)) + (FB->BPP * X)
     );
 
   //
@@ -97,7 +97,7 @@ ScreenPutPixel (
   //  Replace contents of the memory block
   //  with the provided BGRA (32-bit) color.
   //
-  *((volatile UINT64 *)(Address)) = Color;
+  *((volatile UINTN *)(Address)) = Color;
 
   VideoMemoryLockRelease (&VideoMemoryLocked);
 }
@@ -107,14 +107,13 @@ ScreenScrollTerminal (
   VOID
   )
 {
-  UINTN  LineWidth  = FB->HorizontalRes * FB->BPP;
-  UINTN  LineHeight = FB->VerticalRes * FB->BPP;
-
   for (UINTN Y = 0; Y < FBHeight; Y++) {
     KernMemMove (
       (VOID *)(FB->FramebufferBase + (Y * FBWidth)),
       (VOID *)(FB->FramebufferBase + ((Y + ExtFontHdr.Height) * FBWidth)),
-      FBWidth
+      (FBWidth + FBHeight)
       );
   }
+
+  ScreenRow--;
 }
