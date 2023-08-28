@@ -5,13 +5,15 @@ Poccy, whilst still a WIP, is a toy OS I've built in my spare time for a school 
 ## Goals
 
 - [x] Custom bootloader to obtain basic information necessary, load the kernel image and call it with passed down arguments.
-- [x] Graphics methods for handling plotting pixels to the screen
+- [x] Graphics methods for plotting pixels to the screen
 - [x] Handling drawing glyphs on the screen from a font file
+- [x] GDT and IDT support (TODO: IDT impls)
+- [ ] Interrupt handler
 - [ ] Filesystem handler
 - [ ] Memory management (pagers, vmem functions, etc.)
-- [ ] Mutex locks for threads
+- [ ] Multi-threading
 - [ ] Basic Bash & C support
-- [ ] PS/2 Keyboard support
+- [ ] PS/2 Keyboard support (via interrupts)
 - [ ] ACPICA implementation
 - [ ] DSDT parser to expose the table in plaintext
 - [ ] Basic math library (logarithms, pow(), etc.)
@@ -56,6 +58,10 @@ qemu-system-x86_64 \
 ```
 
 Additionally, if you need to use a debugger, you will need to append the `-S` flag when executing qemu. As per the nature of GDB, it doesn't support Microsoft's Program Database (PDB) file format, and you can only use LLDB for real-time debugging.
+
+## Kernel ABI
+
+**TODO**
 
 ## Credits / Resources
 
