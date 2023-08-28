@@ -1,10 +1,7 @@
-#include "../../Common/Memory/KernMem.h"
-#include "../../Common/Memory/KernEfiMem.h"
-#include "../../Common/Memory/KernMemoryManager.h"
-#include "../../Common/Assert/KernAssert.h"
-#include "../../Common/Util/KernRuntimeValues.h"
-#include "../../Common/Util/KernString.h"
-#include "../../Common/Drivers/IO/serial.h"
+#include "Memory/KernMem.h"
+#include "Memory/KernMemoryManager.h"
+#include "Assert/KernAssert.h"
+#include "Util/KernString.h"
 
 #include <Uefi.h>
 
@@ -13,15 +10,14 @@
 VOID
 AllocateBitmap (
   IN EFI_KERN_MEMORY_MAP  *MemoryMap,
-  IN UINTN                __SizeNeeded OPTIONAL
+  IN UINTN                SizeNeeded OPTIONAL
   )
 {
   EFI_MEMORY_DESCRIPTOR  *Desc           = MemoryMap->MemoryMap;
-  BOOLEAN                SizeUnspecified = __SizeNeeded == 0;
+  BOOLEAN                SizeUnspecified = SizeNeeded == 0;
 
   while (
     (UINTN)Desc < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
-    Desc->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
     Desc->PhysicalStart < 2147483648
     )
   {
@@ -48,7 +44,7 @@ AllocateBitmap (
       continue;
     }
 
-    if (CALC_SIZE_OF_FRAME (Desc) >= __SizeNeeded) {
+    if (CALC_SIZE_OF_FRAME (Desc) >= SizeNeeded) {
       Bitmap = (UINT8 *)Desc->PhysicalStart;
       break;
     }
@@ -72,17 +68,35 @@ KernCreateMMap (
   AllocateBitmap (MemoryMap, 0);
 
   if (Bitmap == NULL) {
-    kprint ("[DEBUG::KernMemoryManager]: FAILED TO ALLOCATE BITMAP!\n");
+ #ifdef DEBUG_MEMORY
+    kprint ("[DEBUG::MEMORY::CREATE_MMAP]: FAILED TO ALLOCATE BITMAP!\n");
+ #endif
 
     return;
   }
 
-  while (
-    (UINTN)Entry < ((UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize) &&
-    Entry->PhysicalStart < MEMORY_UPPER_BOUNDARY &&
-    Entry->PhysicalStart < 2147483648
+  for (
+    EFI_MEMORY_DESCRIPTOR *Entry = MemoryMap->MemoryMap;
+    (UINTN)Entry < (UINTN)MemoryMap->MemoryMap + MemoryMap->MemoryMapSize &&
+    (UINTN)Entry->PhysicalStart < 2147483648;
+    Entry = NEXT_MEMORY_DESCRIPTOR (Entry, MemoryMap->DescriptorSize)
     )
   {
+ #ifdef DEBUG_MEMORY
+    kprint ("[DEBUG::MEMORY::CREATE_MMAP]: At address range: ");
+    kprint (__DecimalToHex (Entry->PhysicalStart, TRUE));
+    kprint (" - ");
+    kprint (__DecimalToHex (Entry->PhysicalStart + (Entry->NumberOfPages * KERN_SIZE_OF_PAGE), TRUE));
+ #endif
+
+    if (Entry->PhysicalStart == (UINTN)Bitmap) {
+ #ifdef DEBUG_MEMORY
+      kprint (" [[  IS BITMAP FRAME  ]]!!!\n");
+ #endif
+
+      continue;
+    }
+
     if (
       (Entry->Type == EfiConventionalMemory) ||
       (Entry->Type == EfiLoaderCode) ||
@@ -91,12 +105,9 @@ KernCreateMMap (
       (Entry->Type == EfiBootServicesCode)
       )
     {
-      if (Entry->PhysicalStart == (UINTN)Bitmap) {
-        goto exit_bitmap_set;
-      }
-
-      UINTN  __Size      = DIV_ROUNDUP (Entry->NumberOfPages, 8);
-      UINTN  BitmapPages = DIV_ROUNDUP (BitmapSize, 4096);
+ #ifdef DEBUG_MEMORY
+      kprint (" [[  IS FREE  ]]!\n");
+ #endif
 
       //
       //  Just in case some vendors decide
@@ -115,10 +126,12 @@ KernCreateMMap (
         UINTN  ByteFree = Index / KERN_SIZE_OF_PAGE / 8;
         UINTN  Bit      = (Index / KERN_SIZE_OF_PAGE) % 8;
 
-      BitmapSize += __Size;
+        Bitmap[ByteFree + Offset] |= (1 << Bit);
+      }
+    } else {
+ #ifdef DEBUG_MEMORY
+      kprint (" [[  IS UNAVAILABLE  ]]!!!\n");
+ #endif
     }
-
-exit_bitmap_set:
-    Entry = (EFI_MEMORY_DESCRIPTOR *)NEXT_MEMORY_DESCRIPTOR (Entry, MemoryMap->DescriptorSize);
   }
 }
