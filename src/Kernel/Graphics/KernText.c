@@ -30,23 +30,23 @@ kprint (
 //
 //  TODO:   Pain.
 //
-VOID
-kprintf (
-  IN CONST CHAR8  *Fmt,
-  ...
-  )
-{
-  va_list  args;
+// VOID
+// kprintf (
+//   IN CONST CHAR8  *Fmt,
+//   ...
+//   )
+// {
+//   va_list  args;
 
-  va_start (args, Fmt);
+//   va_start (args, Fmt);
 
-  CHAR8  Char;
+//   CHAR8  Char;
 
-  for (Char = *Fmt; Char != '\0'; Char++) {
-  }
+//   for (Char = *Fmt; Char != '\0'; Char++) {
+//   }
 
-  // va_end (args);
-}
+//   va_end (args);
+// }
 
 VOID
 PutChar (
@@ -58,6 +58,14 @@ PutChar (
     ScreenRow++;
 
     return;
+  }
+
+  if (Char == '\t') {
+ #ifdef PRINT_TABS
+    kprint ("    ");
+
+    return;
+ #endif
   }
 
   UINT8  *GlyphStart = ((UINT8 *)FontFile) + sizeof (PSF_FONT_HDR) + (Char * 16);
@@ -93,7 +101,6 @@ PutChar (
     ScreenScrollTerminal ();
     VideoMemoryLockRelease (&VideoMemoryLocked);
 
-    ScreenRow--;
     return PutChar (Char);
   }
 }
