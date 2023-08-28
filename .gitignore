@@ -5,3 +5,5 @@ hda-contents/*
 .vscode
 *.o
 *.pdb
+.idea
+cmake-build-debug
