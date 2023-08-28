@@ -1,7 +1,7 @@
-#include "../../../Common/Assert/KernAssert.h"
-#include "../../../Common/Util/KernString.h"
-#include "../../../Common/Drivers/IO/serial.h"
-#include "../../../Common/Drivers/IO/io.h"
+#include "Assert/KernAssert.h"
+#include "Util/KernString.h"
+#include "Drivers/IO/serial.h"
+#include "Drivers/IO/io.h"
 
 #include <Uefi.h>
 
@@ -22,7 +22,7 @@ InitSerial (
   OutB8 (COM1_PORT + 4, 0x1E);
   OutB8 (COM1_PORT + 0, 0xAE);
 
-  if ( InB8 (COM1_PORT + 0) != 0xAE ) {
+  if (InB8 (COM1_PORT + 0) != 0xAE) {
     return FALSE;
   }
 
@@ -32,8 +32,14 @@ InitSerial (
 }
 
 UINTN
+IsSerialReceived (
+  )
+{
+  return InB8 (COM1_PORT + 5) & 1;
+}
+
+UINTN
 IsTransmitEmpty (
-  VOID
   )
 {
   return InB8 (COM1_PORT + 5) & 0x20;
@@ -48,6 +54,16 @@ WriteSerial (
   }
 
   OutB8 (COM1_PORT, Character);
+}
+
+CHAR8
+ReadSerial (
+  )
+{
+  while (IsSerialReceived () == 0) {
+  }
+
+  return InB8 (COM1_PORT);
 }
 
 VOID

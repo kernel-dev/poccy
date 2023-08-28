@@ -20,12 +20,33 @@ InitSerial (
   );
 
 /**
+ * Checks if the COM1 port data has been received.
+ *
+ * @return  UINTN   An integer value determining whether
+ *                  or not the port's already received.
+ */
+UINTN
+IsSerialReceived (
+  VOID
+  );
+
+/**
  * Checks if the transmit is empty.
  *
  * @return UINTN Whether or not the transmit is empty.
  */
 UINTN
 IsTransmitEmpty (
+  VOID
+  );
+
+/**
+ * Reads data sent through the COM1 port.
+ *
+ * @return  CHAR8   The data read from COM1 port.
+ */
+CHAR8
+ReadSerial (
   VOID
   );
 
