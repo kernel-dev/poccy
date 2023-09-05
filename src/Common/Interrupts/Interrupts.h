@@ -1,8 +1,25 @@
-//
-// Created by Mladen Golo on 4. 9. 2023..
-//
+#ifndef INTERRUPTS_H
+#define INTERRUPTS_H
 
-#ifndef KERNELOSPKG_INTERRUPTS_H
-#define KERNELOSPKG_INTERRUPTS_H
+#include <Uefi.h>
 
-#endif //KERNELOSPKG_INTERRUPTS_H
+__attribute__ ((noreturn)) VOID
+ExceptionHandler (
+  VOID
+  );
+
+extern VOID  *isr_stub_table[];
+
+VOID
+IDTSetDescriptor (
+  UINT8  Vector,
+  VOID   *InterruptService,
+  UINT8  Flags
+  );
+
+VOID
+InitIDT (
+  VOID
+  );
+
+#endif /* Interrupts.h */
