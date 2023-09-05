@@ -28,9 +28,7 @@ InitializeGDT (
 {
   DisableInterrupts ();
 
-  kprint ("[GDTDescriptor::Before]: BaseAddress: ");
-  kprint (__DecimalToHex ((UINTN)&Gdt, TRUE));
-  kprint ("\n");
+  kprintf ("[GDTDescriptor::Before]: BaseAddress: %p\n", &Gdt);
 
   GDTDescriptor  Descriptor = {
     .Limit       = sizeof (GDT) - 1,
@@ -42,7 +40,7 @@ InitializeGDT (
   //    possibly happen.
   //
   if (Descriptor.Limit != (sizeof (GDT) - 1)) {
-    kprint ("[GDT]: Limit is misaligned!\n");
+    kprintf ("[GDT]: Limit is misaligned!\n");
 
     return;
   }
@@ -55,63 +53,43 @@ InitializeGDT (
 
   GDT  *Entry = (GDT *)Saved.BaseAddress;
 
-  kprint ("[GDTEntry]: KernelCode: \n");
-  kprint ("\tLimitLow: ");
-  kprint (__DecimalToHex (Entry->KernelCode.LimitLow, TRUE));
-  kprint (" | BaseLow: ");
-  kprint (__DecimalToHex (Entry->KernelCode.BaseLow, TRUE));
-  kprint (" | BaseMiddle: ");
-  kprint (__DecimalToHex (Entry->KernelCode.BaseMiddle, TRUE));
-  kprint (" | Access: ");
-  kprint (__DecimalToHex (Entry->KernelCode.Access, TRUE));
-  kprint (" | Granularity: ");
-  kprint (__DecimalToHex (Entry->KernelCode.Granularity, TRUE));
-  kprint (" | BaseHigh: ");
-  kprint (__DecimalToHex (Entry->KernelCode.BaseHigh, TRUE));
-  kprint ("\n");
+  kprintf (
+    "[GDTEntry]: KernelCode:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
+    Entry->KernelCode.LimitLow,
+    Entry->KernelCode.BaseLow,
+    Entry->KernelCode.BaseMiddle,
+    Entry->KernelCode.Access,
+    Entry->KernelCode.Granularity,
+    Entry->KernelCode.BaseHigh
+    );
 
-  kprint ("[GDTEntry]: KernelData: \n");
-  kprint ("\tLimitLow: ");
-  kprint (__DecimalToHex (Entry->KernelData.LimitLow, TRUE));
-  kprint (" | BaseLow: ");
-  kprint (__DecimalToHex (Entry->KernelData.BaseLow, TRUE));
-  kprint (" | BaseMiddle: ");
-  kprint (__DecimalToHex (Entry->KernelData.BaseMiddle, TRUE));
-  kprint (" | Access: ");
-  kprint (__DecimalToHex (Entry->KernelData.Access, TRUE));
-  kprint (" | Granularity: ");
-  kprint (__DecimalToHex (Entry->KernelData.Granularity, TRUE));
-  kprint (" | BaseHigh: ");
-  kprint (__DecimalToHex (Entry->KernelData.BaseHigh, TRUE));
-  kprint ("\n");
+  kprintf (
+    "[GDTEntry]: KernelData:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
+    Entry->KernelData.LimitLow,
+    Entry->KernelData.BaseLow,
+    Entry->KernelData.BaseMiddle,
+    Entry->KernelData.Access,
+    Entry->KernelData.Granularity,
+    Entry->KernelData.BaseHigh
+    );
 
-  kprint ("[GDTEntry]: UserCode: \n");
-  kprint ("\tLimitLow: ");
-  kprint (__DecimalToHex (Entry->UserCode.LimitLow, TRUE));
-  kprint (" | BaseLow: ");
-  kprint (__DecimalToHex (Entry->UserCode.BaseLow, TRUE));
-  kprint (" | BaseMiddle: ");
-  kprint (__DecimalToHex (Entry->UserCode.BaseMiddle, TRUE));
-  kprint (" | Access: ");
-  kprint (__DecimalToHex (Entry->UserCode.Access, TRUE));
-  kprint (" | Granularity: ");
-  kprint (__DecimalToHex (Entry->UserCode.Granularity, TRUE));
-  kprint (" | BaseHigh: ");
-  kprint (__DecimalToHex (Entry->UserCode.BaseHigh, TRUE));
-  kprint ("\n");
+  kprintf (
+    "[GDTEntry]: KernelCode:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
+    Entry->UserCode.LimitLow,
+    Entry->UserCode.BaseLow,
+    Entry->UserCode.BaseMiddle,
+    Entry->UserCode.Access,
+    Entry->UserCode.Granularity,
+    Entry->UserCode.BaseHigh
+    );
 
-  kprint ("[GDTEntry]: UserData: \n");
-  kprint ("\tLimitLow: ");
-  kprint (__DecimalToHex (Entry->UserData.LimitLow, TRUE));
-  kprint (" | BaseLow: ");
-  kprint (__DecimalToHex (Entry->UserData.BaseLow, TRUE));
-  kprint (" | BaseMiddle: ");
-  kprint (__DecimalToHex (Entry->UserData.BaseMiddle, TRUE));
-  kprint (" | Access: ");
-  kprint (__DecimalToHex (Entry->UserData.Access, TRUE));
-  kprint (" | Granularity: ");
-  kprint (__DecimalToHex (Entry->UserData.Granularity, TRUE));
-  kprint (" | BaseHigh: ");
-  kprint (__DecimalToHex (Entry->UserData.BaseHigh, TRUE));
-  kprint ("\n");
+  kprintf (
+    "[GDTEntry]: KernelCode:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
+    Entry->UserData.LimitLow,
+    Entry->UserData.BaseLow,
+    Entry->UserData.BaseMiddle,
+    Entry->UserData.Access,
+    Entry->UserData.Granularity,
+    Entry->UserData.BaseHigh
+    );
 }

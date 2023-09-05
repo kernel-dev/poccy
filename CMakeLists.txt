@@ -10,14 +10,15 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 set(CMAKE_C_COMPILER zigcc)
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DPRINT_TABS -DDEBUG_CPU -DDEBUG_INTERRUPTS")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DPRINT_TABS -DDEBUG_CPU -DDEBUG_INTERRUPTS -DDEBUG_MEMORY")
 
 set(CMAKE_ASM_COMPILER /usr/local/bin/nasm)
 set(CMAKE_NASM_SOURCE_FILE_EXTENSIONS "s;S")
 
 set(ASM_SOURCES
         ${CMAKE_SOURCE_DIR}/src/Assembly/FlushGDT.s
-        ${CMAKE_SOURCE_DIR}/src/Assembly/Interrupts.s)
+        ${CMAKE_SOURCE_DIR}/src/Assembly/Interrupts.s
+        ${CMAKE_SOURCE_DIR}/src/Assembly/Exception.s)
 
 foreach (ASM_SOURCE ${ASM_SOURCES})
     get_filename_component(ASM_FILENAME ${ASM_SOURCE} NAME_WE)
@@ -39,6 +40,7 @@ add_executable(KernelOSPkg
         ${CMAKE_SOURCE_DIR}/src/Kernel/Interrupts/ApicHandler.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Interrupts/MSRegister.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Interrupts/GDT.c
+        ${CMAKE_SOURCE_DIR}/src/Kernel/Interrupts/Interrupts.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Syscall/CPUID/CPUID.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Graphics/KernFontParser.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Graphics/KernGraphics.c
@@ -59,6 +61,7 @@ add_executable(KernelOSPkg
         ${CMAKE_SOURCE_DIR}/src/Common/Interrupts/GDT.h
         ${CMAKE_SOURCE_DIR}/src/Common/Interrupts/IDTRTable.h
         ${CMAKE_SOURCE_DIR}/src/Common/Interrupts/TrapExceptions.h
+        ${CMAKE_SOURCE_DIR}/src/Common/Interrupts/Interrupts.h
         ${CMAKE_SOURCE_DIR}/src/Common/Syscall/CPUID/CPUID.h
         ${CMAKE_SOURCE_DIR}/src/Common/Graphics/KernFontParser.h
         ${CMAKE_SOURCE_DIR}/src/Common/Graphics/KernGraphics.h

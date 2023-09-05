@@ -1,8 +1,10 @@
 #include "Interrupts/ApicHandler.h"
 #include "Interrupts/MSRegister.h"
+#include "Syscall/CPUID/CPUID.h"
 
 #include "Uefi.h"
 #include "Library/UefiLib.h"
+#include "Graphics/KernText.h"
 
 VOID
 CpuSetApicBase (
@@ -56,6 +58,14 @@ VOID
 EnableAPIC (
   )
 {
+  if (CheckAPIC () == FALSE) {
+    kprintf ("[APIC]: APIC is unavailable! Halting system...\n");
+
+    for ( ;;) {
+      __asm__ ("cli; hlt");
+    }
+  }
+
   CpuSetApicBase (CpuGetApicBase ());
 
   WriteAPICRegister (0xF0, ReadAPICRegister (0xF0) | 0x100);

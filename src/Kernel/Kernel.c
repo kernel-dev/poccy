@@ -5,6 +5,8 @@
 #include "Drivers/PS2/PS2KeyboardDriver.h"
 #include "Interrupts/ApicHandler.h"
 #include "Interrupts/GDT.h"
+#include "Interrupts/Interrupts.h"
+#include "Syscall/CPUID/CPUID.h"
 
 #include <Uefi.h>
 
@@ -57,9 +59,14 @@ EfiMain (
   KernCreateMMap (MemoryMap);
 
   //
-  //    Initialize the GDT and IDT.
+  //    Initialize the GDT.
   //
   InitializeDescriptorTables ();
+
+  //
+  //    Initialize the IDT.
+  //
+  InitIDT ();
 
   //
   //  Enable the APIC if possible.
@@ -69,26 +76,13 @@ EfiMain (
   //
   //  Test print.
   //
-  kprint ("Hello, kernelOS!\n");
+  kprintf ("Hello, kernelOS!\n");
 
-  House  *my_house = kmalloc (sizeof (House));
+  CHAR8  *ProcessorBrand = kmalloc (sizeof (UINTN) * 12 + 1);
 
-  if (my_house != NULL) {
-    my_house->Name  = "My House";
-    my_house->Owner = "Me2";
+  ProcessBrandString (ProcessorBrand);
 
-    for (UINT32 Index = 0; Index < 5; Index++) {
-      kprint ("House of name: ");
-      kprint (my_house->Name);
-      kprint (" is owned by yours truly, ");
-      kprint (my_house->Owner);
-      kprint ("\n");
-    }
-  } else {
- #ifdef DEBUG_MEMORY
-    kprint ("[DEBUG::MEMORY::MALLOC]: Failed to allocate memory for 'House' struct!\n");
- #endif
-  }
+  kprintf ("[DEBUG::CPUID::BRAND_STRING]: PROCESSOR BRAND STRING: %s\n", ProcessorBrand);
 
   CHAR8  Key;
 

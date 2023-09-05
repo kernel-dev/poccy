@@ -150,9 +150,7 @@ pages_search_success:
 
       if (((Value >> Bit) & 1) == 1) {
  #ifdef DEBUG_MEMORY_ALLOC
-        kprint ("[DEBUG::MEMORY::MEMORY_ALLOC]: PAGE AT ADDRESS ");
-        kprint (__DecimalToHex ((UINTN)Frame * 4096, TRUE));
-        kprint (" IS AVAILABLE FOR USAGE!\n");
+        kprintf ("[DEBUG::MEMORY::MEMORY_ALLOC]: PAGE AT ADDRESS %X IS AVAILABLE FOR USAGE!\n", (UINTN)Frame * 0x1000);
  #endif
 
         if (Start == NULL) {
@@ -162,11 +160,11 @@ pages_search_success:
         CurrCntgFreePages++;
       } else {
  #ifdef DEBUG_MEMORY_ALLOC
-        kprint ("[DEBUG::MEMORY::MEMORY_ALLOC]: ");
-        kprint (_KernItoa (CurrCntgFreePages));
-        kprint ("-ITH PAGE IS TAKEN (AT ADDRESS ");
-        kprint (__DecimalToHex ((UINTN)Frame * 0x1000, TRUE));
-        kprint (") GOING NEXT BIT OVER...\n");
+        kprintf (
+          "[DEBUG::MEMORY::MEMORY_ALLOC]: %d-ITH PAGE IS TAKEN (AT ADDRESS %X) GOING NEXT BIT OVER...\n",
+          CurrCntgFreePages,
+          (UINTN)Frame * 0x1000
+          )
  #endif
 
         CurrCntgFreePages = 0;

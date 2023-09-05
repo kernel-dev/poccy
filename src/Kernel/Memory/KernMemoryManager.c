@@ -69,7 +69,7 @@ KernCreateMMap (
 
   if (Bitmap == NULL) {
  #ifdef DEBUG_MEMORY
-    kprint ("[DEBUG::MEMORY::CREATE_MMAP]: FAILED TO ALLOCATE BITMAP!\n");
+    kprintf ("[DEBUG::MEMORY::CREATE_MMAP]: FAILED TO ALLOCATE BITMAP!\n");
  #endif
 
     return;
@@ -83,15 +83,16 @@ KernCreateMMap (
     )
   {
  #ifdef DEBUG_MEMORY
-    kprint ("[DEBUG::MEMORY::CREATE_MMAP]: At address range: ");
-    kprint (__DecimalToHex (Entry->PhysicalStart, TRUE));
-    kprint (" - ");
-    kprint (__DecimalToHex (Entry->PhysicalStart + (Entry->NumberOfPages * KERN_SIZE_OF_PAGE), TRUE));
+    kprintf (
+      "[DEBUG::MEMORY::CREATE_MMAP]: FRAME RANGE: %X - %X",
+      Entry->PhysicalStart,
+      (Entry->PhysicalStart + (Entry->NumberOfPages * KERN_SIZE_OF_PAGE))
+      );
  #endif
 
     if (Entry->PhysicalStart == (UINTN)Bitmap) {
  #ifdef DEBUG_MEMORY
-      kprint (" [[  IS BITMAP FRAME  ]]!!!\n");
+      kprintf (" [[  IS BITMAP FRAME  ]]!!!\n");
  #endif
 
       continue;
@@ -106,7 +107,7 @@ KernCreateMMap (
       )
     {
  #ifdef DEBUG_MEMORY
-      kprint (" [[  IS FREE  ]]!\n");
+      kprintf (" [[  IS FREE  ]]!\n");
  #endif
 
       //
@@ -130,7 +131,7 @@ KernCreateMMap (
       }
     } else {
  #ifdef DEBUG_MEMORY
-      kprint (" [[  IS UNAVAILABLE  ]]!!!\n");
+      kprintf (" [[  IS UNAVAILABLE  ]]!!!\n");
  #endif
     }
   }

@@ -107,13 +107,15 @@ ScreenScrollTerminal (
   VOID
   )
 {
-  for (UINTN Y = 0; Y < FBHeight; Y++) {
-    KernMemMove (
-      (VOID *)(FB->FramebufferBase + (Y * FBWidth)),
-      (VOID *)(FB->FramebufferBase + ((Y + ExtFontHdr.Height) * FBWidth)),
-      (FBWidth + FBHeight)
-      );
-  }
+  UINTN  BytesToMove = FBWidth * (FBHeight - ExtFontHdr.Height);
+
+  VOID  *Source      = (VOID *)(FB->FramebufferBase + FBWidth * ExtFontHdr.Height);
+  VOID  *Destination = (VOID *)(FB->FramebufferBase);
+
+  KernMemMove (Destination, Source, BytesToMove);
+
+  Destination = (VOID *)(FB->FramebufferBase + BytesToMove);
+  KernMemset (Destination, 0, FBWidth);
 
   ScreenRow--;
 }
