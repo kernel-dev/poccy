@@ -7,6 +7,8 @@
 #include "../../Common/Util/KernString.h"
 #include "../../Common/Util/KernRuntimeValues.h"
 
+#include <stdarg.h>
+
 #include <Uefi.h>
 
 #include <Library/UefiLib.h>
@@ -30,29 +32,132 @@ kprint (
 //
 //  TODO:   Pain.
 //
-// VOID
-// kprintf (
-//   IN CONST CHAR8  *Fmt,
-//   ...
-//   )
-// {
-//   va_list  args;
+VOID
+kprintf (
+  IN CONST CHAR8  *Fmt,
+  ...
+  )
+{
+  va_list  args;
 
-//   va_start (args, Fmt);
+  va_start (args, format);
 
-//   CHAR8  Char;
+  while (*Fmt) {
+    if (*Fmt == '%') {
+      Fmt++;
 
-//   for (Char = *Fmt; Char != '\0'; Char++) {
-//   }
+      //
+      //    Pointer.
+      //
+      if (*Fmt == 'p') {
+        UINTN  *Value = (UINTN *)va_arg (args, VOID *);
+        CHAR8  *Str   = __DecimalToHex ((UINTN)Value, TRUE);
 
-//   va_end (args);
-// }
+        kprint (Str);
+      }
+      //
+      //    Hexadecimal.
+      //
+      else if ((*Fmt == 'x') || (*Fmt == 'X')) {
+        BOOLEAN  Capitals = *Fmt == 'X';
+
+        UINTN  Value = va_arg (args, UINTN);
+        CHAR8  *Str  = __DecimalToHex (Value, Capitals);
+
+        kprint (Str);
+      }
+      //
+      //    String.
+      //
+      else if (*Fmt == 's') {
+        const CHAR8  *str = va_arg (args, const CHAR8 *);
+
+        kprint (str);
+      }
+      //
+      //    Integer/long.
+      //
+      else if ((*Fmt == 'd') || (*Fmt == 'l')) {
+        //
+        //    Regular integer.
+        //
+        if (*(Fmt + 1) == 'd') {
+          CHAR8  *Str = _KernItoa (va_arg (args, INT32));
+
+          kprint (Str);
+        }
+        //
+        //  Long.
+        //
+        else if (*(Fmt + 1) == 'l') {
+          //
+          //  Long in an integer representation.
+          //
+          if (*(Fmt + 2) == 'd') {
+            CHAR8  *Str = _KernItoa (va_arg (args, long));
+
+            kprint (Str);
+          }
+          //
+          //    Long-long in an integer representation.
+          //
+          else if ((*(Fmt + 2) == 'l') && (*(Fmt + 3) == 'd')) {
+            CHAR8  *Str = _KernItoa (va_arg (args, long long));
+
+            kprint (Str);
+          }
+          //
+          //    Long represented in hexadecimal.
+          //
+          else if ((*(Fmt + 2) == 'x') || (*(Fmt + 2) == 'X')) {
+            BOOLEAN  Capitals = *(Fmt + 2) == 'X';
+            CHAR8    *Str     = __DecimalToHex (va_arg (args, long), Capitals);
+
+            kprint (Str);
+          }
+          //
+          //    Long-long represented in hexadecimal.
+          //
+          else if ((*(Fmt + 2) == 'l') && ((*(Fmt + 3) == 'x') || (*(Fmt + 3) == 'X'))) {
+            BOOLEAN  Capitals = *(Fmt + 3) == 'X';
+            CHAR8    *Str     = __DecimalToHex (va_arg (args, long long), Capitals);
+
+            kprint (Str);
+          }
+        }
+
+        // Skip additional characters (d, ld, lld, llx) in the format specifier
+        while (*Fmt && *Fmt != ' ') {
+          Fmt++;
+        }
+      }
+    }
+    //
+    //  Not recognized/supported format.
+    //
+    else {
+      PutChar (*Fmt);
+    }
+
+    Fmt++;
+  }
+
+  va_end (args);
+}
 
 VOID
 PutChar (
   IN CHAR8  Char
   )
 {
+  //
+  //  Who knew that the condition for scrolling
+  //  would be `VertRes / BitsPerPixel`?
+  //
+  if (ScreenRow >= (FB->VerticalRes / (FB->BPP * 4))) {
+    ScreenScrollTerminal ();
+  }
+
   if (Char == '\n') {
     ScreenCol = 1;
     ScreenRow++;
@@ -94,13 +199,5 @@ PutChar (
   if (ScreenCol >= FBWidth) {
     ScreenCol = 1;
     ScreenRow++;
-  }
-
-  if (ScreenRow >= FBHeight) {
-    VideoMemoryLockAcquire (&VideoMemoryLocked);
-    ScreenScrollTerminal ();
-    VideoMemoryLockRelease (&VideoMemoryLocked);
-
-    return PutChar (Char);
   }
 }
