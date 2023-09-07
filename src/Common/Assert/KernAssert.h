@@ -1,21 +1,20 @@
 #ifndef KERN_ASSERT_H
 #define KERN_ASSERT_H
 
-#include "../Drivers/IO/serial.h"
-#include "../Util/KernRuntimeValues.h"
-#include "../Graphics/KernText.h"
+#include "Drivers/IO/serial.h"
+#include "Util/KernRuntimeValues.h"
+#include "Graphics/KernText.h"
 
 #define STR_EXPR(expr)  #expr
 #define ASSERT(expr) \
     if (!(expr)) \
     { \
-        kprint ("["); \
-        kprint (__FILE__); \
-        kprint ("] ASSERT ( "); \
-        kprint (STR_EXPR(expr)); \
-        kprint (" )"); \
-        kprint (" == "); \
-        kprint (expr ? "1\n" : "0\n"); \
+        kprintf(     \
+            "[%s]: ASSERT (%s) == %s\n", \
+            __FILE__,\
+            STR_EXPR(expr),              \
+            expr ? "1" : "0"        \
+            ); \
         WriteSerialStr ("["); \
         WriteSerialStr (__FILE__); \
         WriteSerialStr ("] ASSERT ( "); \
