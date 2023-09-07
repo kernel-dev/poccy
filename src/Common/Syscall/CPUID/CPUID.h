@@ -78,7 +78,7 @@ CheckAPIC (
 
 VOID
 ProcessBrandString (
-  CHAR8  *ProcessorBrand
+  OUT CHAR8  *ProcessorBrand
   );
 
 #endif /* CPUID.h */

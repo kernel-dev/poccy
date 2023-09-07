@@ -17,7 +17,7 @@ __get_tickrate (
  **/
 VOID
 KernSleep (
-  UINTN  Milliseconds
+  IN UINTN  Milliseconds
   );
 
 #endif /* KernUtil.h */

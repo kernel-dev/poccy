@@ -11,7 +11,7 @@
 
 VOID
 CpuSetApicBase (
-  UINTN  APIC
+  IN UINTN  APIC
   );
 
 UINTN
@@ -21,13 +21,13 @@ CpuGetApicBase (
 
 UINTN
 ReadAPICRegister (
-  UINTN  Register
+  IN UINTN  Register
   );
 
 VOID
 WriteAPICRegister (
-  UINTN  Register,
-  UINTN  Value
+  IN UINTN  Register,
+  IN UINTN  Value
   );
 
 VOID

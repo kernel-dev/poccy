@@ -22,7 +22,7 @@ InitializeDescriptorTables (
   InitializeGDT ();
 }
 
-static VOID
+STATIC VOID
 InitializeGDT (
   )
 {
@@ -74,7 +74,7 @@ InitializeGDT (
     );
 
   kprintf (
-    "[GDTEntry]: KernelCode:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
+    "[GDTEntry]: UserCode:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
     Entry->UserCode.LimitLow,
     Entry->UserCode.BaseLow,
     Entry->UserCode.BaseMiddle,
@@ -84,7 +84,7 @@ InitializeGDT (
     );
 
   kprintf (
-    "[GDTEntry]: KernelCode:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
+    "[GDTEntry]: UserData:\n\tLimitLow: %X | BaseLow: %X | BaseMiddle: %X | Access: %X | Granularity: %X | BaseHigh: %X\n\n",
     Entry->UserData.LimitLow,
     Entry->UserData.BaseLow,
     Entry->UserData.BaseMiddle,

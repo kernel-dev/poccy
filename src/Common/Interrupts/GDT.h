@@ -34,7 +34,7 @@ typedef struct {
 
 extern VOID
 FlushGDT (
-  GDTDescriptor  *Entry
+  IN GDTDescriptor  *Entry
   );
 
 extern VOID
@@ -52,7 +52,7 @@ InitializeDescriptorTables (
   VOID
   );
 
-static VOID
+STATIC VOID
 InitializeGDT (
   VOID
   );

@@ -12,9 +12,9 @@ extern VOID  *isr_stub_table[];
 
 VOID
 IDTSetDescriptor (
-  UINT8  Vector,
-  VOID   *InterruptService,
-  UINT8  Flags
+  IN UINT8  Vector,
+  IN VOID   *InterruptService,
+  IN UINT8  Flags
   );
 
 VOID

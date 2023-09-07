@@ -36,7 +36,7 @@ extern UINT32  FBHeight;
 //  Whether or not a process
 //  is writing to the framebuffer memory space.
 //
-extern atomic_flag  VideoMemoryLocked;
+extern GraphicsSpinlock  graphicsSpinlock;
 
 //
 //  KERN_FRAMEBUFFER pointer.

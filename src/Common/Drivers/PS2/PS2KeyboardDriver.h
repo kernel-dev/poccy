@@ -3,7 +3,7 @@
 
 #include "../../../../../MdePkg/Include/Uefi.h"
 
-static const char *const  KeyPressCodes[] = {
+STATIC CONST CHAR8 *CONST  KeyPressCodes[] = {
   "ESCAPE",
   "1",
   "2",

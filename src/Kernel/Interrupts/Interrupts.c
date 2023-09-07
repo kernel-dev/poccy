@@ -3,15 +3,15 @@
 
 #include <Uefi.h>
 
-__attribute__ ((aligned (0x10))) static InterruptDescriptor IDTs[256];
-static IDTRegister  RegisterIDT;
+__attribute__ ((aligned (0x10))) STATIC InterruptDescriptor IDTs[256];
+STATIC IDTRegister  RegisterIDT;
 BOOLEAN             Vectors[32];
 
 VOID
 IDTSetDescriptor (
-  UINT8  Vector,
-  VOID   *InterruptService,
-  UINT8  Flags
+  IN UINT8  Vector,
+  IN VOID   *InterruptService,
+  IN UINT8  Flags
   )
 {
   InterruptDescriptor  *Descriptor = &IDTs[Vector];

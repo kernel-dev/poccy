@@ -8,7 +8,7 @@
 
 VOID
 CpuSetApicBase (
-  UINTN  APIC
+  IN UINTN  APIC
   )
 {
   UINTN  EAX = (APIC & 0xFFFFF0000) | IA32_APIC_BASE_MSR_ENABLE;
@@ -39,7 +39,7 @@ CpuGetApicBase (
 
 UINTN
 ReadAPICRegister (
-  UINTN  Register
+  IN UINTN  Register
   )
 {
   return *((volatile UINTN *)(CpuGetApicBase () + Register));
@@ -47,8 +47,8 @@ ReadAPICRegister (
 
 VOID
 WriteAPICRegister (
-  UINTN  Register,
-  UINTN  Value
+  IN UINTN  Register,
+  IN UINTN  Value
   )
 {
   *((volatile UINTN *)(CpuGetApicBase () + Register)) = Value;

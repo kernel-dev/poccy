@@ -1,7 +1,7 @@
-#include "../../Common/Util/KernRuntimeValues.h"
-#include "../../Common/Graphics/KernGop.h"
-#include "../../Common/Graphics/KernGraphics.h"
-#include "../../Common/Memory/KernMem.h"
+#include "Util/KernRuntimeValues.h"
+#include "Graphics/KernGop.h"
+#include "Graphics/KernGraphics.h"
+#include "Memory/KernMem.h"
 
 #include <Uefi.h>
 
@@ -9,21 +9,29 @@
 #include <stdatomic.h>
 
 VOID
-VideoMemoryLockAcquire (
-  atomic_flag  *Lock
+GraphicsSpinlockInit (
+  IN GraphicsSpinlock  *Spinlock
   )
 {
-  while (atomic_flag_test_and_set_explicit (Lock, memory_order_acquire)) {
-    __asm__ __volatile__ ("pause");
+  atomic_flag_clear (&Spinlock->lock);
+}
+
+VOID
+GraphicsSpinlockLock (
+  IN GraphicsSpinlock  *Spinlock
+  )
+{
+  while (atomic_flag_test_and_set (&Spinlock->lock)) {
+    __asm__ volatile ("pause");
   }
 }
 
 VOID
-VideoMemoryLockRelease (
-  atomic_flag  *Lock
+GraphicsSpinlockUnlock (
+  IN GraphicsSpinlock  *Spinlock
   )
 {
-  atomic_flag_clear_explicit (Lock, memory_order_release);
+  atomic_flag_clear (&Spinlock->lock);
 }
 
 VOID
@@ -75,7 +83,7 @@ ScreenPutPixel (
   IN UINT32  Color
   )
 {
-  VideoMemoryLockAcquire (&VideoMemoryLocked);
+  GraphicsSpinlockLock (&graphicsSpinlock);
 
   //
   //  Locate the corresponding memory space
@@ -99,7 +107,7 @@ ScreenPutPixel (
   //
   *((volatile UINTN *)(Address)) = Color;
 
-  VideoMemoryLockRelease (&VideoMemoryLocked);
+  GraphicsSpinlockUnlock (&graphicsSpinlock);
 }
 
 VOID

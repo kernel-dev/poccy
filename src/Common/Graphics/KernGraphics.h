@@ -7,13 +7,27 @@
 #include <Library/UefiLib.h>
 #include <stdatomic.h>
 
+typedef struct {
+  atomic_flag    lock;
+} GraphicsSpinlock;
+
+/**
+    Initializes the spinlock for
+    the framebuffer memory space
+    spinlock.
+ **/
+VOID
+GraphicsSpinlockInit (
+  IN GraphicsSpinlock  *Spinlock
+  );
+
 /**
     Locks the framebuffer memory space
     spinlock.
  **/
 VOID
-VideoMemoryLockAcquire (
-  atomic_flag  *Lock
+GraphicsSpinlockLock (
+  IN GraphicsSpinlock  *Spinlock
   );
 
 /**
@@ -21,8 +35,8 @@ VideoMemoryLockAcquire (
     spinlock.
  **/
 VOID
-VideoMemoryLockRelease (
-  atomic_flag  *Lock
+GraphicsSpinlockUnlock (
+  IN GraphicsSpinlock  *Spinlock
   );
 
 /**

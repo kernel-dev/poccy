@@ -23,7 +23,7 @@ CheckAPIC (
 
 VOID
 ProcessBrandString (
-  CHAR8  *ProcessorBrand
+  OUT CHAR8  *ProcessorBrand
   )
 {
   UINT32  Registers[12];

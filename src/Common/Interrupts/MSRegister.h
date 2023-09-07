@@ -12,16 +12,16 @@ CpuHasMSR (
 
 VOID
 CpuGetMSR (
-  UINTN  MSR,
-  UINTN  *Low,
-  UINTN  *High
+  IN UINTN  MSR,
+  IN UINTN  *Low,
+  IN UINTN  *High
   );
 
 VOID
 CpuSetMSR (
-  UINTN  MSR,
-  UINTN  Low,
-  UINTN  High
+  IN UINTN  MSR,
+  IN UINTN  Low,
+  IN UINTN  High
   );
 
 #endif /* MSRegister.h */
