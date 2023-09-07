@@ -94,4 +94,11 @@ kmalloc (
   IN UINTN  Size
   );
 
+UINTN
+KernMemCmp (
+  IN CONST VOID  *First,
+  IN CONST VOID  *Second,
+  IN UINTN       Bytes
+  );
+
 #endif /* KernMem.h */

@@ -1,6 +1,6 @@
-#include "../../Common/Memory/KernMem.h"
-#include "../../Common/Util/KernRuntimeValues.h"
-#include "../../Common/Util/KernString.h"
+#include "Memory/KernMem.h"
+#include "Util/KernRuntimeValues.h"
+#include "Util/KernString.h"
 
 #include <Uefi.h>
 
@@ -72,7 +72,7 @@ KernCopyMem (
     }
 
     long        *AlignedDest = (long *)Dest;
-    long const  *AlignedSrc  = (long const *)Src;
+    long CONST  *AlignedSrc  = (long CONST *)Src;
 
     while (Size >= sizeof (long) * 4) {
       AlignedDest[0] = AlignedSrc[0];
@@ -189,4 +189,23 @@ pages_search_success:
   }
 
   return Start;
+}
+
+UINTN
+KernMemCmp (
+  IN CONST VOID  *First,
+  IN CONST VOID  *Second,
+  IN UINTN       Bytes
+  )
+{
+  CONST unsigned char  *FirstPtr  = First;
+  CONST unsigned char  *SecondPtr = Second;
+
+  for (UINTN Index = 0; Index < Bytes; Index++) {
+    if (FirstPtr[Index] != SecondPtr[Index]) {
+      return (UINTN)(FirstPtr[Index] - SecondPtr[Index]);
+    }
+  }
+
+  return 0;
 }
