@@ -12,29 +12,31 @@
 
 BOOLEAN
 CpuHasMSR (
-) {
-    static UINTN EAX, EDX, UNUSED;
+  )
+{
+  STATIC UINTN  EAX, EDX, UNUSED;
 
-    __cpuid (1, EAX, UNUSED, UNUSED, EDX);
+  __cpuid (1, EAX, UNUSED, UNUSED, EDX);
 
-    return EDX & CPUID_FEAT_EDX_MSR;
+  return EDX & CPUID_FEAT_EDX_MSR;
 }
 
 VOID
 CpuGetMSR (
-        UINTN  MSR,
-        UINTN  *Low,
-        UINTN  *High
-) {
-    asm volatile ("rdmsr" : "=a"(Low), "=d"(High) : "c"(MSR));
+  IN UINTN  MSR,
+  IN UINTN  *Low,
+  IN UINTN  *High
+  )
+{
+  asm volatile ("rdmsr" : "=a"(Low), "=d"(High) : "c"(MSR));
 }
-
 
 VOID
 CpuSetMSR (
-        UINTN  MSR,
-        UINTN  Low,
-        UINTN  High
-) {
-    asm volatile ("wrmsr" :: "a"(Low), "d"(High), "c"(MSR));
+  IN UINTN  MSR,
+  IN UINTN  Low,
+  IN UINTN  High
+  )
+{
+  asm volatile ("wrmsr" :: "a"(Low), "d"(High), "c"(MSR));
 }
