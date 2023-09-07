@@ -18,6 +18,23 @@ _KernStrLen (
   );
 
 /**
+    Checks if two strings are identical up
+    to N consecutive characters.
+
+    @param[in]  First       The first string to compare to.
+    @param[in]  Second      The second string to compare to the first.
+    @param[in]  Chars       How many characters to compare.
+
+    @retval     UINTN       0 if they match, otherwise >0.
+ **/
+UINTN
+_KernStrCmp (
+  IN  CONST CHAR8  *First,
+  IN  CONST CHAR8  *Second,
+  IN  UINTN        Chars
+  );
+
+/**
     Internal method for reversing a string.
 
     @param[in,out]  Buffer  The string to reverse.

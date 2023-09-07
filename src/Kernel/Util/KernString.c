@@ -26,7 +26,7 @@ _KernStrLen (
     return 0;
   }
 
-  const CHAR8  *S;
+  CONST CHAR8  *S;
 
   for (S = String; *S; ++S) {
   }
@@ -46,7 +46,7 @@ _KernReverseStr (
   UINTN  Beg = 0;
   UINTN  End = Length - 1;
 
-  for (UINTN Index = 0; Index < (Length / 2); Beg++, End--) {
+  for (UINTN Index = 0; Index < (Length / 2); Index++, Beg++, End--) {
     CHAR8  First = Buffer[Beg];
     CHAR8  Last  = Buffer[End];
 
@@ -60,7 +60,7 @@ _KernItoa (
   IN  INT64  Num
   )
 {
-  static CHAR8  Buffer[MAX_DIGITS + 2];
+  STATIC CHAR8  Buffer[MAX_DIGITS + 2];
 
   CHAR8  *Ptr = Buffer + MAX_DIGITS + 1;
 
@@ -85,7 +85,7 @@ __DecimalToHex (
     return "0";
   }
 
-  static CHAR8  Buffer[MAX_BUF];
+  STATIC CHAR8  Buffer[MAX_BUF];
 
   register CHAR8  *Ptr = (Buffer + MAX_BUF - 1);
 
@@ -101,4 +101,27 @@ __DecimalToHex (
   *--Ptr = '0';
 
   return Ptr;
+}
+
+UINTN
+_KernStrCmp (
+  IN CONST CHAR8  *First,
+  IN CONST CHAR8  *Second,
+  IN UINTN        Chars
+  )
+{
+  while (Chars--) {
+    if (*First != *Second) {
+      return (UINTN)((*First) - (*Second));
+    }
+
+    if (*First == '\0') {
+      break;
+    }
+
+    First++;
+    Second++;
+  }
+
+  return 0;
 }
