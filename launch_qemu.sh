@@ -18,7 +18,11 @@ osascript - "$DIRPATH" <<EOF
             -drive file=fat:rw:hda-contents,format=raw,media=disk \
             -m 1024M \
             -s \
-            -no-reboot -d int,cpu_reset
+            -machine q35 \
+            -smp 2
+#            -no-reboot \
+#            -d int,cpu_reset \
+#            -cpu Icelake-Server-v4
       " in window 1
     end tell
   end run
