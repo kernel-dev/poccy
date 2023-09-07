@@ -1,7 +1,9 @@
 #include "Acpi/KernEfiAcpi.h"
+#include "Acpi/MADTParser.h"
 #include "Assert/KernAssert.h"
 #include "Memory/KernMem.h"
 #include "Util/KernString.h"
+#include "Util/KernRuntimeValues.h"
 #include "Drivers/PS2/PS2KeyboardDriver.h"
 #include "Interrupts/ApicHandler.h"
 #include "Interrupts/GDT.h"
@@ -24,7 +26,8 @@ VOID
 EfiMain (
   IN EFI_RUNTIME_SERVICES                         *RT,
   IN EFI_KERN_MEMORY_MAP                          *MemoryMap,
-  IN ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE  **Dsdt,
+  IN EFI_ACPI_DESCRIPTION_HEADER                  *Xsdt,
+  IN ACPI_DIFFERENTIATED_SYSTEM_DESCRIPTOR_TABLE  *Dsdt,
   IN KERN_FRAMEBUFFER                             *Framebuffer,
   IN VOID                                         *TerminalFont
   )
@@ -52,6 +55,8 @@ EfiMain (
   //
   InitSerial ();
 
+  GraphicsSpinlockInit (&graphicsSpinlock);
+
   //
   //  Create an internal Bitmap
   //  representation of system memory.
@@ -72,6 +77,11 @@ EfiMain (
   //  Enable the APIC if possible.
   //
   EnableAPIC ();
+
+  //
+  //    Attempt to parse MADT.
+  //
+  //  DetectCores (Xsdt);
 
   //
   //  Test print.
