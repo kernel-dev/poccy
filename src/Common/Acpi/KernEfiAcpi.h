@@ -9,16 +9,29 @@
     header, according to the ACPI 6.5 specification.
  **/
 typedef struct {
-  UINT32    Signature;
+  CHAR8     Signature[4];
   UINT32    Length;
   UINT8     Revision;
   UINT8     Checksum;
-  UINT8     OemId[6];
-  UINT8     OemTableId[8];
-  UINT8     OemRevision[4];
-  UINT8     CreatorId[4];
-  UINT8     CreatorRevision[4];
-} SDT_HEADER;
+  CHAR8     OemId[6];
+  CHAR8     OemTableId[8];
+  UINT32    OemRevision;
+  CHAR8     CreatorId[4];
+  UINT32    CreatorRevision;
+} __attribute__ ((packed)) SDT_HEADER;
+
+typedef struct {
+  CHAR8     Signature[4];       // 'X' 'S' 'D' 'T'
+  UINT32    Length;
+  UINT8     Revision;
+  UINT8     Checksum;
+  CHAR8     OEMID[6];
+  CHAR8     OEMTableID[8];
+  UINT32    OEMRevision;
+  CHAR8     CreatorID[4];
+  UINT32    CreatorRevision;
+  UINT64    Entries[];          // 8*n, n = Length - sizeof(SDT_HEADER)
+} __attribute__ ((packed)) ACPI_XSDT;
 
 /**
     Structure for the DSDT (Differentiated System Description Table),
