@@ -66,13 +66,25 @@ kprintf (
 
         kprint (Str);
       }
+
+      //
+      //  Character.
+      //
+      else if (*Fmt == 'c') {
+        CHAR8  Character = va_arg (args, CHAR8);
+
+        PutChar (Character);
+      }
+
       //
       //    String.
       //
       else if (*Fmt == 's') {
-        const CHAR8  *str = va_arg (args, const CHAR8 *);
+        CHAR8  *Str = va_arg (args, CHAR8 *);
 
-        kprint (str);
+        if ((Str != NULL) && (*Str != '\0') && (_KernStrLen (Str) > 0)) {
+          kprint (Str);
+        }
       }
       //
       //    Integer/long.
