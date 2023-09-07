@@ -10,7 +10,7 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 set(CMAKE_C_COMPILER zigcc)
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DPRINT_TABS -DDEBUG_CPU -DDEBUG_INTERRUPTS -DDEBUG_MEMORY")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DPRINT_TABS -DDEBUG_CPU -DDEBUG_INTERRUPTS")
 
 set(CMAKE_ASM_COMPILER /usr/local/bin/nasm)
 set(CMAKE_NASM_SOURCE_FILE_EXTENSIONS "s;S")
@@ -33,6 +33,7 @@ endforeach ()
 
 add_executable(KernelOSPkg
         ${CMAKE_SOURCE_DIR}/src/Kernel/Kernel.c
+        ${CMAKE_SOURCE_DIR}/src/Kernel/Acpi/MADTParser.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Drivers/IO/io.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Drivers/IO/serial.c
         ${CMAKE_SOURCE_DIR}/src/Kernel/Drivers/USB/KernKeyboard.c
@@ -52,6 +53,7 @@ add_executable(KernelOSPkg
         ${CMAKE_SOURCE_DIR}/src/Kernel/Util/KernUtil.c
         ${CMAKE_SOURCE_DIR}/src/Math/Pow.c
         ${CMAKE_SOURCE_DIR}/src/Math/Logarithm.c
+        ${CMAKE_SOURCE_DIR}/src/Common/Acpi/MADTParser.h
         ${CMAKE_SOURCE_DIR}/src/Common/Drivers/IO/io.h
         ${CMAKE_SOURCE_DIR}/src/Common/Drivers/IO/serial.h
         ${CMAKE_SOURCE_DIR}/src/Common/Drivers/USB/KernKeyboard.h
@@ -75,7 +77,8 @@ add_executable(KernelOSPkg
         ${CMAKE_SOURCE_DIR}/src/Common/Util/KernUtil.h
         ${CMAKE_SOURCE_DIR}/src/Common/Math/Pow.h
         ${CMAKE_SOURCE_DIR}/src/Common/Math/Logarithm.h
-        ${ASM_OBJECTS})
+        ${ASM_OBJECTS}
+        )
 
 set_target_properties(KernelOSPkg PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/hda-contents")
 set_target_properties(KernelOSPkg PROPERTIES OUTPUT_NAME "kernel.bin")
