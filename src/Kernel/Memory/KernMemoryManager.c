@@ -98,6 +98,10 @@ KernCreateMMap (
       continue;
     }
 
+    if ((Entry->PhysicalStart >= FB->FramebufferBase) && (Entry->PhysicalStart < (FB->FramebufferBase + FB->FramebufferSize))) {
+      continue;
+    }
+
     if (
       (Entry->Type == EfiConventionalMemory) ||
       (Entry->Type == EfiLoaderCode) ||
