@@ -11,7 +11,8 @@ __attribute__ ((aligned (64))) GDT Gdt = {
   .KernelCode = { 0, 0, 0, 0x9A, 0xA0, 0 },
   .KernelData = { 0, 0, 0, 0x92, 0xC0, 0 },
   .UserCode   = { 0, 0, 0, 0xFA, 0xA0, 0 },
-  .UserData   = { 0, 0, 0, 0xF2, 0xC0, 0 }
+  .UserData   = { 0, 0, 0, 0xF2, 0xC0, 0 },
+  // .TSS = {0, sizeof()}
 };
 
 VOID

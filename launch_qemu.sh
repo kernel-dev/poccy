@@ -1,8 +1,8 @@
 #!/bin/zsh
 
 DIRPATH="$(
-    cd -- "$(dirname "$0")" >/dev/null 2>&1
-    pwd -P
+  cd -- "$(dirname "$0")" >/dev/null 2>&1
+  pwd -P
 )"
 
 echo "Attempting to launch QEMU..."
@@ -20,9 +20,9 @@ osascript - "$DIRPATH" <<EOF
             -s \
             -machine q35 \
             -smp 2
-#            -no-reboot \
-#            -d int,cpu_reset \
-#            -cpu Icelake-Server-v4
+            -no-reboot \
+            -d int,cpu_reset \
+            -cpu Icelake-Server-v4
       " in window 1
     end tell
   end run

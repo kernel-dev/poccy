@@ -2,6 +2,7 @@
 #define GDT_H
 
 #include <Uefi.h>
+#include "Interrupts/Interrupts.h"
 
 /**
  * The GDT entry.
@@ -30,6 +31,7 @@ typedef struct {
   GDTEntry    KernelData;
   GDTEntry    UserCode;
   GDTEntry    UserData;
+  TaskSegmentDescriptor TSS;
 } __attribute__ ((packed)) GDT;
 
 extern VOID

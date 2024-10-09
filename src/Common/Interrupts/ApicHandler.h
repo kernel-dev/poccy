@@ -5,34 +5,29 @@
 
 #include <Library/UefiLib.h>
 
-#define IA32_APIC_BASE_MSR         0x1B
-#define IA32_APIC_BASE_MSR_BSP     0x100
-#define IA32_APIC_BASE_MSR_ENABLE  0x800
+#define IA32_APIC_BASE_MSR 0x1B
+#define IA32_APIC_BASE_MSR_BSP 0x100
+#define IA32_APIC_BASE_MSR_ENABLE 0x800
 
-VOID
-CpuSetApicBase (
-  IN UINTN  APIC
-  );
+VOID CpuSetApicBase(
+    IN UINTN APIC);
 
 UINTN
-CpuGetApicBase (
-  VOID
-  );
+CpuGetApicBase(
+    VOID);
 
 UINTN
-ReadAPICRegister (
-  IN UINTN  Register
-  );
+ReadAPICRegister(
+    IN UINTN Register);
+
+VOID WriteAPICRegister(
+    IN UINTN Register,
+    IN UINTN Value);
 
 VOID
-WriteAPICRegister (
-  IN UINTN  Register,
-  IN UINTN  Value
-  );
+    EnableAPIC(
+        VOID);
 
-VOID
-EnableAPIC (
-  VOID
-  );
+VOID SendEOI(UINT8 IRQ);
 
 #endif /* ApicHandler.h */

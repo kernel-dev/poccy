@@ -7,3 +7,9 @@ hda-contents/*
 *.pdb
 .idea
 cmake-build-debug
+CMakeCache.txt
+*.obj
+Makefile
+cmake_install.cmake
+build/
+CMakeFiles
